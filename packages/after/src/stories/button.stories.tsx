@@ -15,9 +15,34 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
-  name: "기본 버튼",
+  name: "primary",
   args: {
-    variant: "default", 
-    children: "기본 버튼",
+    variant: "primary", 
+    children: "버튼",
+  },
+};
+
+
+export const Secondary: Story = {
+  name: "secondary",
+  args: {
+    variant: "secondary", 
+    children: "버튼",
+  },
+};
+
+export const Danger: Story = {
+  name: "danger",
+  args: {
+    variant: "danger", 
+    children: "버튼",
+  },
+};
+
+export const Success: Story = {
+  name: "success",
+  args: {
+    variant: "success", 
+    children: "버튼",
   },
 };

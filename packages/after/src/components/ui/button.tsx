@@ -10,30 +10,25 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          "bg-blue-500 bg-primary text-primary-foreground hover:bg-primary/90",
-        destructive:
+        primary:
+          "bg-primary text-primary-foreground hover:bg-primary/90",
+        danger:
           "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
-        outline:
-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-        link: "text-primary underline-offset-4 hover:underline",
+          success:
+          "bg-success text-white hover:bg-success/90 focus-visible:ring-success/20 dark:focus-visible:ring-success/40 dark:bg-success/60",
       },
       size: {
-        default: "h-9 px-4 py-2 has-[>svg]:px-3",
-        sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
-        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
-        icon: "size-9",
-        "icon-sm": "size-8",
-        "icon-lg": "size-10",
+        md: "h-9 py-2.5 px-5 font-size-[14px]",
+        sm: "px-[12px] py-[6px] font-size-[13px]",
+        lg: "px-[24px] py-[12px] font-size-[15px]",
+        full: "w-full",
       },
     },
     defaultVariants: {
-      variant: "default",
-      size: "default",
+      variant: "primary",
+      size: "md",
     },
   }
 );
