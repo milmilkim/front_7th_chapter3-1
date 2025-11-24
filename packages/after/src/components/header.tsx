@@ -1,0 +1,37 @@
+export const Header: React.FC = () => {
+  return (
+    <header className="sticky top-0 z-50 flex w-full items-center justify-center border-b bg-white shadow-sm">
+      <div className="my-0 flex h-16 w-full max-w-[1400px] items-center justify-between px-6">
+        {/* Logo */}
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-xl font-bold text-primary-foreground">
+            L
+          </div>
+
+          <div>
+            <h1 className="m-0 text-lg leading-none font-bold text-foreground">
+              Hanghae Company
+            </h1>
+            <p className="m-0 mt-[2px] text-[11px] leading-none text-foreground">
+              Design System Migration Project
+            </p>
+          </div>
+        </div>
+
+        {/* User Info */}
+        <div className="flex items-center gap-3">
+          <div className="text-right">
+            <div className="text-sm font-semibold text-foreground">
+              Demo User
+            </div>
+            <div className="text-xs text-foreground">demo@example.com</div>
+          </div>
+
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 text-base font-semibold text-primary">
+            DU
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+};
