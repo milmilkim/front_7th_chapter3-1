@@ -7,12 +7,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  NativeSelect,
+  NativeSelectOption,
+} from "@/components/ui/native-select";
 
 interface Option {
   value: string;
@@ -43,20 +40,24 @@ export function FormSelect<T extends FieldValues>({
       render={({ field, fieldState }) => (
         <FormItem>
           <FormLabel>{label}</FormLabel>
-          <Select onValueChange={field.onChange} value={field.value}>
-            <FormControl>
-              <SelectTrigger className={className} aria-invalid={fieldState.invalid}>
-                <SelectValue placeholder={placeholder} />
-              </SelectTrigger>
-            </FormControl>
-            <SelectContent>
+          <FormControl>
+            <NativeSelect
+              {...field}
+              className={className}
+              aria-invalid={fieldState.invalid}
+            >
+              {placeholder && (
+                <NativeSelectOption value="" disabled>
+                  {placeholder}
+                </NativeSelectOption>
+              )}
               {options.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
+                <NativeSelectOption key={option.value} value={option.value}>
                   {option.label}
-                </SelectItem>
+                </NativeSelectOption>
               ))}
-            </SelectContent>
-          </Select>
+            </NativeSelect>
+          </FormControl>
           <FormMessage />
         </FormItem>
       )}
