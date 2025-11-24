@@ -17,13 +17,16 @@ const StatCard = ({
     {
       variants: {
         variant: {
-          primary: "border border-primary bg-primary/30 text-primary",
-          secondary:
-            "border border-border bg-secondary/30 text-secondary-foreground",
-          success: "border-success bg-success/30 text-success",
-          danger: "border-destructive bg-destructive/30 text-destructive",
-          warning: "border-warning bg-warning/30 text-warning",
-          info: "text-info-foreground border-info bg-info/30 text-info",
+          primary:
+            "border-primary-light-border bg-primary-light text-primary-dark",
+          secondary: "border-secondary-border bg-secondary text-secondary-foreground",
+          success:
+            "border-success-light-border bg-success-light text-success-dark",
+          danger:
+            "border-destructive-light-border bg-destructive-light text-destructive-dark",
+          warning:
+            "border-warning-light-border bg-warning-light text-warning-dark",
+          info: "border-primary-light-border bg-primary-light text-primary-dark",
         },
       },
     },
