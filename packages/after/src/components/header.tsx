@@ -1,7 +1,7 @@
 export const Header: React.FC = () => {
   return (
-    <header className="sticky top-0 z-50 flex w-full items-center justify-center border-b bg-white shadow-sm">
-      <div className="my-0 flex h-16 w-full max-w-[1400px] items-center justify-between px-6">
+    <header className="sticky top-0 z-50 items-center justify-center border-b bg-white shadow-sm">
+      <div className="m-auto my-0 flex h-16 max-w-[1400px] justify-between px-6">
         {/* Logo */}
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-xl font-bold text-primary-foreground">
