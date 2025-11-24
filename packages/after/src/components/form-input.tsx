@@ -14,12 +14,14 @@ interface FormInputProps<T extends FieldValues> {
   label: string;
   placeholder?: string;
   type?: string;
+  required?: boolean;
 }
 
 export function FormInput<T extends FieldValues>({
   control,
   name,
   label,
+  required,
   ...props
 }: FormInputProps<T>) {
   return (
@@ -28,7 +30,10 @@ export function FormInput<T extends FieldValues>({
       name={name}
       render={({ field, fieldState }) => (
         <FormItem>
-          <FormLabel>{label}</FormLabel>
+          <FormLabel>
+            {label}
+            {required && <span className="text-destructive"> *</span>}
+          </FormLabel>
           <FormControl>
             <Input {...field} {...props} aria-invalid={fieldState.invalid} />
           </FormControl>

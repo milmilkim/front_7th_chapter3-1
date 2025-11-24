@@ -23,6 +23,7 @@ interface FormSelectProps<T extends FieldValues> {
   options: Option[];
   placeholder?: string;
   className?: string;
+  required?: boolean;
 }
 
 export function FormSelect<T extends FieldValues>({
@@ -32,6 +33,7 @@ export function FormSelect<T extends FieldValues>({
   options,
   placeholder,
   className,
+  required,
 }: FormSelectProps<T>) {
   return (
     <FormField
@@ -39,7 +41,10 @@ export function FormSelect<T extends FieldValues>({
       name={name}
       render={({ field, fieldState }) => (
         <FormItem>
-          <FormLabel>{label}</FormLabel>
+          <FormLabel>
+            {label}
+            {required && <span className="text-destructive"> *</span>}
+          </FormLabel>
           <FormControl>
             <NativeSelect
               {...field}

@@ -47,6 +47,7 @@ const UserForm = ({ form }: UserFormProps) => {
         name="username"
         label="사용자명"
         placeholder="사용자명을 입력하세요"
+        required
       />
       <FormInput
         control={control}
@@ -54,6 +55,7 @@ const UserForm = ({ form }: UserFormProps) => {
         label="이메일"
         placeholder="이메일을 입력하세요"
         type="email"
+        required
       />
       <div className="grid grid-cols-2 items-start gap-3">
         <FormSelect

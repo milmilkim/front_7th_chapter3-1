@@ -48,6 +48,7 @@ const PostForm = ({ form }: PostFormProps) => {
         name="title"
         label="제목"
         placeholder="게시글 제목을 입력하세요"
+        required
       />
       <div className="grid grid-cols-2 items-start gap-3">
         <FormInput
@@ -55,6 +56,7 @@ const PostForm = ({ form }: PostFormProps) => {
           name="username"
           label="작성자"
           placeholder="작성자명"
+          required
         />
         <FormSelect
           control={control}

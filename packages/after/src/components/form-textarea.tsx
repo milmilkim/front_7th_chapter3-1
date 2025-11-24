@@ -14,12 +14,14 @@ interface FormTextareaProps<T extends FieldValues> {
   label: string;
   placeholder?: string;
   rows?: number;
+  required?: boolean;
 }
 
 export function FormTextarea<T extends FieldValues>({
   control,
   name,
   label,
+  required,
   ...props
 }: FormTextareaProps<T>) {
   return (
@@ -28,7 +30,10 @@ export function FormTextarea<T extends FieldValues>({
       name={name}
       render={({ field, fieldState }) => (
         <FormItem>
-          <FormLabel>{label}</FormLabel>
+          <FormLabel>
+            {label}
+            {required && <span className="text-destructive"> *</span>}
+          </FormLabel>
           <FormControl>
             <Textarea {...field} {...props} aria-invalid={fieldState.invalid} />
           </FormControl>
