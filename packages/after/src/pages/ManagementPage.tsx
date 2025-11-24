@@ -16,7 +16,7 @@ const ManagementPageContent: React.FC = () => {
       <div className="max-w-[1200px] p-10" style={{ margin: "0 auto" }}>
         <div style={{ marginBottom: "20px" }}>
           <h1>관리 시스템</h1>
-          <p>사용자와 게시글을 관리하세요</p>
+          <p className="text-muted-foreground">사용자와 게시글을 관리하세요</p>
         </div>
 
         <Card>
