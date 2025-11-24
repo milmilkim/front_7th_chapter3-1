@@ -18,6 +18,8 @@ const buttonVariants = cva(
           "border-border bg-secondary text-secondary-foreground hover:bg-secondary/80",
         success:
           "border-success/80 bg-success text-white hover:bg-success/90 focus-visible:ring-success/20 dark:bg-success/60 dark:focus-visible:ring-success/40",
+        ghost:
+          "border-transparent bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground",
       },
       size: {
         sm: "px-3 py-1.5 text-xs",

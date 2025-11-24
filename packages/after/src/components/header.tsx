@@ -1,3 +1,5 @@
+import { ModeToggle } from "./mode-toggle";
+
 export const Header: React.FC = () => {
   return (
     <header className="sticky top-0 z-50 items-center justify-center border-b bg-card shadow-sm">
@@ -20,6 +22,8 @@ export const Header: React.FC = () => {
 
         {/* User Info */}
         <div className="flex items-center gap-3">
+          <ModeToggle />
+
           <div className="text-right">
             <div className="text-sm font-semibold text-foreground">
               Demo User
