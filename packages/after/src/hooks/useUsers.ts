@@ -16,14 +16,15 @@ export const useUsers = () => {
     admin: 0,
   });
 
+  const fetchUsers = async () => {
+    const data = await userService.getAll();
+    setUsers(data);
+    setStats(calculateUserStats(data));
+  };
+
   useEffect(() => {
-    const loadData = async () => {
-      const data = await userService.getAll();
-      setUsers(data);
-      setStats(calculateUserStats(data));
-    };
-    loadData();
+    fetchUsers();
   }, []);
 
-  return { users, stats };
+  return { users, stats, fetchUsers };
 };

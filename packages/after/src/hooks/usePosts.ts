@@ -16,14 +16,15 @@ export const usePosts = () => {
     views: 0,
   });
 
+  const fetchPosts = async () => {
+    const data = await postService.getAll();
+    setPosts(data);
+    setStats(calculatePostStats(data));
+  };
+
   useEffect(() => {
-    const loadData = async () => {
-      const data = await postService.getAll();
-      setPosts(data);
-      setStats(calculatePostStats(data));
-    };
-    loadData();
+    fetchPosts();
   }, []);
 
-  return { posts, stats };
+  return { posts, stats, fetchPosts };
 };
