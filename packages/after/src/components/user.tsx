@@ -119,6 +119,7 @@ const User = () => {
           open={isEditUserModalOpen}
           onClose={() => setIsEditUserModalOpen(false)}
           id={selectedUserId}
+          onSuccess={() => fetchUsers()}
         />
       )}
     </div>

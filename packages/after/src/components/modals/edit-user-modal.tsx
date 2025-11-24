@@ -10,44 +10,65 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import PostForm, { type PostFormValues } from "@/components/post-form";
 import { Alert, AlertDescription } from "../ui/alert";
 import { useCallback, useEffect, useState } from "react";
 import { userService, type User } from "@/services/userService";
 import { Form } from "../ui/form";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import UserForm, { userFormSchema, type UserFormValues } from "../user-form";
 
 interface EditUserModalProps {
   open: boolean;
   onClose?: () => void;
+  onSuccess?: () => void;
   id: number;
 }
 
-const EditUserModal = ({ open, onClose, id }: EditUserModalProps) => {
+const EditUserModal = ({ open, onClose, onSuccess, id }: EditUserModalProps) => {
   const { addAlert } = useAlert();
   const [user, setUser] = useState<User | null>(null);
 
-  const form = useForm<PostFormValues>({
+  const form = useForm<UserFormValues>({
+    resolver: zodResolver(userFormSchema),
+    mode: "onChange",
     defaultValues: {
-      title: "",
       username: "",
-      category: "",
-      content: "",
+      email: "",
+      role: "",
+      status: "",
     },
   });
-
-  const onSubmit = (data: PostFormValues) => {
-    console.log(data);
-    addAlert("성공", "사용자가 수정되었습니다", "success");
-    onClose?.();
-  };
 
   const fetchUser = useCallback(async () => {
     const user = await userService.getById(id);
     if (user) {
       setUser(user);
+      form.reset({
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        status: user.status,
+      });
     }
-  }, [id]);
+  }, [id, form]);
+
+  const onSubmit = async (data: UserFormValues) => {
+    try {
+      await userService.update(id, {
+        username: data.username,
+        email: data.email,
+        role: data.role as User["role"],
+        status: data.status as User["status"],
+      });
+      addAlert("성공", "사용자가 수정되었습니다", "success");
+      onSuccess?.();
+      onClose?.();
+    } catch (error) {
+      console.error(error);
+      addAlert("실패", "사용자 수정에 실패했습니다", "error");
+    }
+  };
 
   useEffect(() => {
     fetchUser();
@@ -67,7 +88,7 @@ const EditUserModal = ({ open, onClose, id }: EditUserModalProps) => {
                   ID: {user?.id} | 생성일: {user?.createdAt}
                 </AlertDescription>
               </Alert>
-              <PostForm form={form} />
+              <UserForm form={form} />
             </DialogBody>
             <DialogFooter>
               <DialogClose asChild>

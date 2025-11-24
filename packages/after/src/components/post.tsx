@@ -161,6 +161,7 @@ const Post = () => {
         <EditPostModal
           open={isEditPostModalOpen}
           onClose={() => setIsEditPostModalOpen(false)}
+          onSuccess={() => fetchPosts()}
           id={selectedPostId}
         />
       )}
