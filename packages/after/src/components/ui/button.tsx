@@ -11,13 +11,13 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-primary text-primary-foreground border-primary/80 hover:bg-primary/90",
+          "border-primary/80 bg-primary text-primary-foreground hover:bg-primary/90",
         danger:
-          "bg-destructive text-white border-destructive/80 hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40",
+          "border-destructive/80 bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40",
         secondary:
-          "bg-secondary text-secondary-foreground border-border hover:bg-secondary/80",
+          "border-border bg-secondary text-secondary-foreground hover:bg-secondary/80",
         success:
-          "bg-success text-white border-success/80 hover:bg-success/90 focus-visible:ring-success/20 dark:bg-success/60 dark:focus-visible:ring-success/40",
+          "border-success/80 bg-success text-white hover:bg-success/90 focus-visible:ring-success/20 dark:bg-success/60 dark:focus-visible:ring-success/40",
       },
       size: {
         sm: "px-3 py-1.5 text-xs",

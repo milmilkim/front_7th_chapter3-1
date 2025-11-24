@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-
+import Post from "@/components/post";
+import User from "@/components/user";
 type EntityType = "user" | "post";
 
 export const ManagementPage: React.FC = () => {
@@ -36,9 +37,11 @@ export const ManagementPage: React.FC = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <Button variant="primary" size="md" className="float-right">
+            <Button variant="primary" size="md" className="float-right mb-4">
               새로 만들기
             </Button>
+            {entityType === "post" && <Post />}
+            {entityType === "user" && <User />}
           </CardContent>
         </Card>
       </div>
