@@ -2,47 +2,47 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button } from "@/components/ui/button";
 
 const meta = {
-  title: "버튼",
+  title: "UI/Button",
   component: Button,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
-  decorators: [(Story) => <Story />],
 } satisfies Meta<typeof Button>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Primary: Story = {
-  name: "primary",
+export const Default: Story = {
   args: {
-    variant: "primary", 
-    children: "버튼",
+    children: "Button",
   },
 };
 
-
-export const Secondary: Story = {
-  name: "secondary",
-  args: {
-    variant: "secondary", 
-    children: "버튼",
-  },
+export const AllVariants: Story = {
+  render: () => (
+    <div className="flex gap-2">
+      <Button variant="primary">Primary</Button>
+      <Button variant="secondary">Secondary</Button>
+      <Button variant="danger">Danger</Button>
+      <Button variant="success">Success</Button>
+    </div>
+  ),
 };
 
-export const Danger: Story = {
-  name: "danger",
-  args: {
-    variant: "danger", 
-    children: "버튼",
-  },
+export const AllSizes: Story = {
+  render: () => (
+    <div className="flex items-center gap-2">
+      <Button size="sm">Small</Button>
+      <Button size="md">Medium</Button>
+      <Button size="lg">Large</Button>
+    </div>
+  ),
 };
 
-export const Success: Story = {
-  name: "success",
+export const Disabled: Story = {
   args: {
-    variant: "success", 
-    children: "버튼",
+    children: "Disabled",
+    disabled: true,
   },
 };
