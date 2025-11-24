@@ -4,6 +4,8 @@ import { DataTable, type Column } from "@/components/data-table";
 import type { Post as PostType } from "@/services/postService";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "./ui/button";
+import CreateUserModal from "./modals/create-user-modal";
+import { useState } from "react";
 
 const getStatusInfo = (status: PostType["status"]) => {
   switch (status) {
@@ -89,10 +91,20 @@ const columns: Column<PostType>[] = [
 
 const Post = () => {
   const { posts, stats } = usePosts();
+  const [open, setOpen] = useState(false);
+
+  const handleClickCreate = () => {
+    setOpen(true);
+  };
 
   return (
     <div>
-      <Button variant="primary" size="md" className="float-right mb-4">
+      <Button
+        onClick={() => handleClickCreate()}
+        variant="primary"
+        size="md"
+        className="float-right mb-4"
+      >
         새로 만들기
       </Button>
       <div className="flex w-full flex-col gap-4">
@@ -105,6 +117,7 @@ const Post = () => {
         </div>
         <DataTable columns={columns} data={posts} keyField="id" />
       </div>
+      <CreateUserModal open={open} onClose={() => setOpen(false)} />
     </div>
   );
 };
