@@ -16,18 +16,51 @@
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
+
+  /* Primary */
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-border: var(--primary-border);
+  --color-primary-light: var(--primary-light);
+  --color-primary-light-border: var(--primary-light-border);
+  --color-primary-dark: var(--primary-dark);
+
+  /* Secondary */
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-secondary-border: var(--secondary-border);
+
+  /* Destructive */
+  --color-destructive: var(--destructive);
+  --color-destructive-hover: var(--destructive-hover);
+  --color-destructive-border: var(--destructive-border);
+  --color-destructive-light: var(--destructive-light);
+  --color-destructive-light-border: var(--destructive-light-border);
+  --color-destructive-dark: var(--destructive-dark);
+
+  /* Success */
+  --color-success: var(--success);
+  --color-success-hover: var(--success-hover);
+  --color-success-border: var(--success-border);
+  --color-success-light: var(--success-light);
+  --color-success-light-border: var(--success-light-border);
+  --color-success-dark: var(--success-dark);
+
+  /* Warning */
+  --color-warning: var(--warning);
+  --color-warning-light: var(--warning-light);
+  --color-warning-light-border: var(--warning-light-border);
+  --color-warning-dark: var(--warning-dark);
+
+  /* Info */
+  --color-info: var(--info);
+
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-success: var(--success);
-  --color-warning: var(--warning);
-  --color-info: var(--info);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -41,18 +74,51 @@
   --card-foreground: var(--gray-800);
   --popover: var(--white);
   --popover-foreground: oklch(0.145 0 0);
+
+  /* Primary */
   --primary: var(--blue-600);
   --primary-foreground: var(--white);
+  --primary-hover: var(--blue-700);
+  --primary-border: var(--blue-700);
+  --primary-light: var(--blue-50);
+  --primary-light-border: var(--blue-200);
+  --primary-dark: var(--blue-900);
+
+  /* Secondary */
   --secondary: var(--gray-100);
   --secondary-foreground: var(--gray-800);
+  --secondary-hover: var(--gray-200);
+  --secondary-border: var(--gray-300);
+
+  /* Destructive */
+  --destructive: var(--red-600);
+  --destructive-hover: var(--red-700);
+  --destructive-border: var(--red-700);
+  --destructive-light: var(--red-50);
+  --destructive-light-border: var(--red-200);
+  --destructive-dark: var(--red-900);
+
+  /* Success */
+  --success: var(--green-600);
+  --success-hover: var(--green-700);
+  --success-border: var(--green-700);
+  --success-light: var(--green-50);
+  --success-light-border: var(--green-200);
+  --success-dark: var(--green-900);
+
+  /* Warning */
+  --warning: var(--orange-600);
+  --warning-light: var(--orange-50);
+  --warning-light-border: var(--orange-200);
+  --warning-dark: var(--orange-900);
+
+  /* Info */
+  --info: var(--cyan-600);
+
   --muted: var(--gray-100);
   --muted-foreground: var(--gray-600);
   --accent: var(--gray-100);
   --accent-foreground: var(--gray-800);
-  --destructive: var(--red-600);
-  --success: var(--green-600);
-  --warning: var(--orange-600);
-  --info: var(--cyan-600);
   --border: var(--gray-300);
   --input: var(--gray-300);
   --ring: var(--blue-600);
