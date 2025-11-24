@@ -18,8 +18,8 @@ const badgeVariants = cva(
         success:
           "border-transparent bg-success text-white focus-visible:ring-success/20 dark:bg-success/60 dark:focus-visible:ring-success/40 [a&]:hover:bg-success/90",
         warning:
-          "bg-warning [a&]:hover:bg-warning/90 focus-visible:ring-warning/20 dark:focus-visible:ring-warning/40 dark:bg-warning/60 border-transparent text-white",
-        info: "bg-info [a&]:hover:bg-info/90 focus-visible:ring-info/20 dark:focus-visible:ring-info/40 dark:bg-info/60 border-transparent text-white",
+          "border-transparent bg-warning text-white focus-visible:ring-warning/20 dark:bg-warning/60 dark:focus-visible:ring-warning/40 [a&]:hover:bg-warning/90",
+        info: "border-transparent bg-info text-white focus-visible:ring-info/20 dark:bg-info/60 dark:focus-visible:ring-info/40 [a&]:hover:bg-info/90",
       },
     },
     defaultVariants: {
@@ -46,4 +46,5 @@ function Badge({
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { Badge, badgeVariants };

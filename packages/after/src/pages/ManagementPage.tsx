@@ -37,9 +37,6 @@ export const ManagementPage: React.FC = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <Button variant="primary" size="md" className="float-right mb-4">
-              새로 만들기
-            </Button>
             {entityType === "post" && <Post />}
             {entityType === "user" && <User />}
           </CardContent>
