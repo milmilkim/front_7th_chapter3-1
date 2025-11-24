@@ -1,11 +1,9 @@
 import { usePosts } from "@/hooks/usePosts";
-import StatCard from "./stat-card";
+import StatCard from "@/components/stat-card";
 import { DataTable, type Column } from "@/components/data-table";
 import type { Post as PostType } from "@/services/postService";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "./ui/button";
-import CreateUserModal from "./modals/create-user-modal";
-import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 const getStatusInfo = (status: PostType["status"]) => {
   switch (status) {
@@ -91,33 +89,17 @@ const columns: Column<PostType>[] = [
 
 const Post = () => {
   const { posts, stats } = usePosts();
-  const [open, setOpen] = useState(false);
-
-  const handleClickCreate = () => {
-    setOpen(true);
-  };
 
   return (
-    <div>
-      <Button
-        onClick={() => handleClickCreate()}
-        variant="primary"
-        size="md"
-        className="float-right mb-4"
-      >
-        새로 만들기
-      </Button>
-      <div className="flex w-full flex-col gap-4">
-        <div className="flex w-full gap-4">
-          <StatCard label="전체" value={stats.total} variant="primary" />
-          <StatCard label="게시됨" value={stats.published} variant="success" />
-          <StatCard label="임시저장" value={stats.draft} variant="warning" />
-          <StatCard label="보관됨" value={stats.archived} variant="danger" />
-          <StatCard label="총 조회수" value={stats.views} variant="secondary" />
-        </div>
-        <DataTable columns={columns} data={posts} keyField="id" />
+    <div className="flex w-full flex-col gap-4">
+      <div className="flex w-full gap-4">
+        <StatCard label="전체" value={stats.total} variant="primary" />
+        <StatCard label="게시됨" value={stats.published} variant="success" />
+        <StatCard label="임시저장" value={stats.draft} variant="warning" />
+        <StatCard label="보관됨" value={stats.archived} variant="danger" />
+        <StatCard label="총 조회수" value={stats.views} variant="secondary" />
       </div>
-      <CreateUserModal open={open} onClose={() => setOpen(false)} />
+      <DataTable columns={columns} data={posts} keyField="id" />
     </div>
   );
 };

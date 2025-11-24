@@ -3,7 +3,7 @@ import StatCard from "@/components/stat-card";
 import { DataTable, type Column } from "@/components/data-table";
 import type { User as UserType } from "@/services/userService";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 
 const getRoleInfo = (role: UserType["role"]) => {
   switch (role) {
@@ -77,20 +77,15 @@ const User = () => {
   const { users, stats } = useUsers();
 
   return (
-    <div>
-      <Button variant="primary" size="md" className="float-right mb-4">
-        새로 만들기
-      </Button>
-      <div className="flex w-full flex-col gap-4">
-        <div className="flex w-full gap-4">
-          <StatCard label="전체" value={stats.total} variant="primary" />
-          <StatCard label="활성" value={stats.active} variant="success" />
-          <StatCard label="비활성" value={stats.inactive} variant="warning" />
-          <StatCard label="정지" value={stats.suspended} variant="danger" />
-          <StatCard label="관리자" value={stats.admin} variant="secondary" />
-        </div>
-        <DataTable columns={columns} data={users} keyField="id" />
+    <div className="flex w-full flex-col gap-4">
+      <div className="flex w-full gap-4">
+        <StatCard label="전체" value={stats.total} variant="primary" />
+        <StatCard label="활성" value={stats.active} variant="success" />
+        <StatCard label="비활성" value={stats.inactive} variant="warning" />
+        <StatCard label="정지" value={stats.suspended} variant="danger" />
+        <StatCard label="관리자" value={stats.admin} variant="secondary" />
       </div>
+      <DataTable columns={columns} data={users} keyField="id" />
     </div>
   );
 };
