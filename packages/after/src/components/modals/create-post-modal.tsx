@@ -22,9 +22,10 @@ import { useForm, type FieldErrors } from "react-hook-form";
 interface CreatePostModalProps {
   open: boolean;
   onClose?: () => void;
+  onSuccess?: () => void;
 }
 
-const CreatePostModal = ({ open, onClose }: CreatePostModalProps) => {
+const CreatePostModal = ({ open, onClose, onSuccess }: CreatePostModalProps) => {
   const { addAlert } = useAlert();
 
   const form = useForm<z.infer<typeof postFormSchema>>({
@@ -41,6 +42,7 @@ const CreatePostModal = ({ open, onClose }: CreatePostModalProps) => {
   const onSubmit = (data: PostFormValues) => {
     console.log(data);
     addAlert("성공", "게시글이 생성되었습니다", "success");
+    onSuccess?.();
     onClose?.();
   };
 

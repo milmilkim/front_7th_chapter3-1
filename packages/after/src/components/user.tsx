@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useAlert } from "@/hooks/useAlert";
 import EditUserModal from "@/components/modals/edit-user-modal";
+import CreateUserModal from "@/components/modals/create-user-modal";
 
 const getRoleInfo = (role: UserType["role"]) => {
   switch (role) {
@@ -39,6 +40,7 @@ const User = () => {
   const { addAlert } = useAlert();
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false);
+  const [isCreateUserModalOpen, setIsCreateUserModalOpen] = useState(false);
 
   const columns = useMemo<Column<UserType>[]>(() => {
     const handleClickDelete = async (id: number) => {
@@ -113,15 +115,25 @@ const User = () => {
         <StatCard label="정지" value={stats.suspended} variant="danger" />
         <StatCard label="관리자" value={stats.admin} variant="secondary" />
       </div>
+      <div className="flex justify-end">
+        <Button onClick={() => setIsCreateUserModalOpen(true)} variant="primary">
+          새로 만들기
+        </Button>
+      </div>
       <DataTable columns={columns} data={users} keyField="id" />
       {selectedUserId && (
         <EditUserModal
           open={isEditUserModalOpen}
           onClose={() => setIsEditUserModalOpen(false)}
           id={selectedUserId}
-          onSuccess={() => fetchUsers()}
+          onSuccess={fetchUsers}
         />
       )}
+      <CreateUserModal
+        open={isCreateUserModalOpen}
+        onClose={() => setIsCreateUserModalOpen(false)}
+        onSuccess={fetchUsers}
+      />
     </div>
   );
 };

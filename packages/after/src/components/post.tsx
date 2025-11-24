@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useMemo, useState } from "react";
 import { useAlert } from "@/hooks/useAlert";
 import EditPostModal from "@/components/modals/edit-post-modal";
+import CreatePostModal from "@/components/modals/create-post-modal";
 
 const getStatusInfo = (status: PostType["status"]) => {
   switch (status) {
@@ -38,6 +39,7 @@ const Post = () => {
   const { posts, stats, fetchPosts } = usePosts();
   const { addAlert } = useAlert();
   const [isEditPostModalOpen, setIsEditPostModalOpen] = useState(false);
+  const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
 
   const columns = useMemo<Column<PostType>[]>(() => {
@@ -156,15 +158,25 @@ const Post = () => {
         <StatCard label="보관됨" value={stats.archived} variant="danger" />
         <StatCard label="총 조회수" value={stats.views} variant="secondary" />
       </div>
+      <div className="flex justify-end">
+        <Button onClick={() => setIsCreatePostModalOpen(true)} variant="primary">
+          새로 만들기
+        </Button>
+      </div>
       <DataTable columns={columns} data={posts} keyField="id" />
       {selectedPostId && (
         <EditPostModal
           open={isEditPostModalOpen}
           onClose={() => setIsEditPostModalOpen(false)}
-          onSuccess={() => fetchPosts()}
+          onSuccess={fetchPosts}
           id={selectedPostId}
         />
       )}
+      <CreatePostModal
+        open={isCreatePostModalOpen}
+        onClose={() => setIsCreatePostModalOpen(false)}
+        onSuccess={fetchPosts}
+      />
     </div>
   );
 };

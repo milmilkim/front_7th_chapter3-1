@@ -14,13 +14,15 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type z from "zod";
 import { Form } from "../ui/form";
+import { userService, type User } from "@/services/userService";
 
 interface CreateUserModalProps {
   open: boolean;
   onClose?: () => void;
+  onSuccess?: () => void;
 }
 
-const CreateUserModal = ({ open, onClose }: CreateUserModalProps) => {
+const CreateUserModal = ({ open, onClose, onSuccess }: CreateUserModalProps) => {
   const { addAlert } = useAlert();
 
   const form = useForm<z.infer<typeof userFormSchema>>({
@@ -29,15 +31,26 @@ const CreateUserModal = ({ open, onClose }: CreateUserModalProps) => {
     defaultValues: {
       username: "",
       email: "",
-      role: "",
-      status: "",
+      role: "user",
+      status: "active",
     },
   });
 
-  const onSubmit = (data: UserFormValues) => {
-    console.log(data);
-    addAlert("성공", "사용자가 생성되었습니다", "success");
-    onClose?.();
+  const onSubmit = async (data: UserFormValues) => {
+    try {
+      await userService.create({
+        username: data.username,
+        email: data.email,
+        role: data.role as User["role"],
+        status: data.status as User["status"],
+      });
+      addAlert("성공", "사용자가 생성되었습니다", "success");
+      onSuccess?.();
+      onClose?.();
+    } catch (error) {
+      console.error(error);
+      addAlert("실패", "사용자 생성에 실패했습니다", "error");
+    }
   };
 
   return (
