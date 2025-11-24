@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
+import { CheckCircle2, XCircle, Info } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -8,29 +9,42 @@ const alertVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-card text-card-foreground",
+        success: "border-success bg-success/10 text-success",
+        info: "border-info bg-info/10 text-info",
         destructive:
           "bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90 [&>svg]:text-current",
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: "success",
     },
   },
 );
 
+const alertIcons = {
+  success: CheckCircle2,
+  info: Info,
+  destructive: XCircle,
+};
+
 function Alert({
   className,
-  variant,
+  variant = "success",
+  children,
   ...props
 }: React.ComponentProps<"div"> & VariantProps<typeof alertVariants>) {
+  const Icon = alertIcons[variant ?? "success"];
+
   return (
     <div
       data-slot="alert"
       role="alert"
       className={cn(alertVariants({ variant }), className)}
       {...props}
-    />
+    >
+      <Icon className="size-4" />
+      {children}
+    </div>
   );
 }
 

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useUsers } from "@/hooks/useUsers";
 import StatCard from "@/components/stat-card";
 import { DataTable, type Column } from "@/components/data-table";
@@ -6,6 +6,7 @@ import { userService, type User as UserType } from "@/services/userService";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useAlert } from "@/hooks/useAlert";
+import EditUserModal from "@/components/modals/edit-user-modal";
 
 const getRoleInfo = (role: UserType["role"]) => {
   switch (role) {
@@ -36,6 +37,8 @@ const getStatusInfo = (status: UserType["status"]) => {
 const User = () => {
   const { users, stats, fetchUsers } = useUsers();
   const { addAlert } = useAlert();
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false);
 
   const columns = useMemo<Column<UserType>[]>(() => {
     const handleClickDelete = async (id: number) => {
@@ -45,6 +48,11 @@ const User = () => {
         addAlert("성공", "삭제되었습니다", "success");
         fetchUsers();
       }
+    };
+
+    const handleClickEdit = (id: number) => {
+      setSelectedUserId(id);
+      setIsEditUserModalOpen(true);
     };
 
     return [
@@ -79,7 +87,9 @@ const User = () => {
         render: (row) => {
           return (
             <>
-              <Button size="sm">수정</Button>{" "}
+              <Button size="sm" onClick={() => handleClickEdit(row.id)}>
+                수정
+              </Button>{" "}
               <Button
                 variant="danger"
                 size="sm"
@@ -104,6 +114,13 @@ const User = () => {
         <StatCard label="관리자" value={stats.admin} variant="secondary" />
       </div>
       <DataTable columns={columns} data={users} keyField="id" />
+      {selectedUserId && (
+        <EditUserModal
+          open={isEditUserModalOpen}
+          onClose={() => setIsEditUserModalOpen(false)}
+          id={selectedUserId}
+        />
+      )}
     </div>
   );
 };

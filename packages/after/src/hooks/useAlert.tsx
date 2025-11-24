@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useCallback } from "react";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { CheckCircle2, XCircle, X } from "lucide-react";
+import { X } from "lucide-react";
 
 type AlertVariant = "success" | "error";
 
@@ -60,17 +60,8 @@ export const AlertContainer = () => {
       {alerts.map((alert) => (
         <Alert
           key={alert.id}
-          className={
-            alert.variant === "success"
-              ? "border-success bg-success/30 text-success"
-              : "border-destructive bg-destructive/30 text-destructive"
-          }
+          variant={alert.variant === "success" ? "success" : "destructive"}
         >
-          {alert.variant === "success" ? (
-            <CheckCircle2 className="size-4" />
-          ) : (
-            <XCircle className="size-4" />
-          )}
           <AlertTitle>{alert.title}</AlertTitle>
           <AlertDescription>{alert.message}</AlertDescription>
           <button

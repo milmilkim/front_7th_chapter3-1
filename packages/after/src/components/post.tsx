@@ -4,8 +4,9 @@ import { DataTable, type Column } from "@/components/data-table";
 import { postService, type Post as PostType } from "@/services/postService";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useAlert } from "@/hooks/useAlert";
+import EditPostModal from "@/components/modals/edit-post-modal";
 
 const getStatusInfo = (status: PostType["status"]) => {
   switch (status) {
@@ -36,6 +37,8 @@ const getCategoryVariant = (category: string) => {
 const Post = () => {
   const { posts, stats, fetchPosts } = usePosts();
   const { addAlert } = useAlert();
+  const [isEditPostModalOpen, setIsEditPostModalOpen] = useState(false);
+  const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
 
   const columns = useMemo<Column<PostType>[]>(() => {
     const handleClickDelete = async (id: number) => {
@@ -60,6 +63,11 @@ const Post = () => {
     const handleClickPublish = async (id: number) => {
       await postService.publish(id);
       fetchPosts();
+    };
+
+    const handleClickEdit = (id: number) => {
+      setSelectedPostId(id);
+      setIsEditPostModalOpen(true);
     };
 
     return [
@@ -95,7 +103,9 @@ const Post = () => {
         render: (row) => {
           return (
             <div className="flex gap-1">
-              <Button size="sm">수정</Button>
+              <Button onClick={() => handleClickEdit(row.id)} size="sm">
+                수정
+              </Button>
               {row.status === "published" && (
                 <Button
                   onClick={() => handleClickArchive(row.id)}
@@ -147,6 +157,13 @@ const Post = () => {
         <StatCard label="총 조회수" value={stats.views} variant="secondary" />
       </div>
       <DataTable columns={columns} data={posts} keyField="id" />
+      {selectedPostId && (
+        <EditPostModal
+          open={isEditPostModalOpen}
+          onClose={() => setIsEditPostModalOpen(false)}
+          id={selectedPostId}
+        />
+      )}
     </div>
   );
 };
