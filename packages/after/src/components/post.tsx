@@ -1,9 +1,11 @@
 import { usePosts } from "@/hooks/usePosts";
 import StatCard from "@/components/stat-card";
 import { DataTable, type Column } from "@/components/data-table";
-import type { Post as PostType } from "@/services/postService";
+import { postService, type Post as PostType } from "@/services/postService";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useMemo } from "react";
+import { useAlert } from "@/hooks/useAlert";
 
 const getStatusInfo = (status: PostType["status"]) => {
   switch (status) {
@@ -31,64 +33,109 @@ const getCategoryVariant = (category: string) => {
   }
 };
 
-const columns: Column<PostType>[] = [
-  { key: "id", label: "ID" },
-  { key: "title", label: "제목" },
-  { key: "author", label: "작성자" },
-  {
-    key: "category",
-    label: "카테고리",
-    render: (row) => (
-      <Badge variant={getCategoryVariant(row.category)}>{row.category}</Badge>
-    ),
-  },
-  {
-    key: "status",
-    label: "상태",
-    render: (row) => {
-      const { label, variant } = getStatusInfo(row.status);
-      return <Badge variant={variant}>{label}</Badge>;
-    },
-  },
-  {
-    key: "views",
-    label: "조회수",
-    render: (row) => row.views.toLocaleString(),
-  },
-  { key: "createdAt", label: "작성일" },
-  {
-    key: "actions",
-    label: "관리",
-    render: (row) => {
-      return (
-        <div className="flex gap-1">
-          <Button size="sm">수정</Button>
-          {row.status === "published" && (
-            <Button variant="secondary" size="sm">
-              보관
-            </Button>
-          )}
-          {row.status === "archived" && (
-            <Button variant="primary" size="sm">
-              복원
-            </Button>
-          )}
-          {row.status === "draft" && (
-            <Button variant="success" size="sm">
-              게시
-            </Button>
-          )}
-          <Button variant="danger" size="sm">
-            삭제
-          </Button>
-        </div>
-      );
-    },
-  },
-];
-
 const Post = () => {
-  const { posts, stats } = usePosts();
+  const { posts, stats, fetchPosts } = usePosts();
+  const { addAlert } = useAlert();
+
+  const columns = useMemo<Column<PostType>[]>(() => {
+    const handleClickDelete = async (id: number) => {
+      const confirmed = confirm("정말 삭제하시겠습니까?");
+      if (confirmed) {
+        await postService.delete(id);
+        addAlert("성공", "삭제되었습니다", "success");
+        fetchPosts();
+      }
+    };
+
+    const handleClickArchive = async (id: number) => {
+      await postService.archive(id);
+      fetchPosts();
+    };
+
+    const handleClickRestore = async (id: number) => {
+      await postService.restore(id);
+      fetchPosts();
+    };
+
+    const handleClickPublish = async (id: number) => {
+      await postService.publish(id);
+      fetchPosts();
+    };
+
+    return [
+      { key: "id", label: "ID" },
+      { key: "title", label: "제목" },
+      { key: "author", label: "작성자" },
+      {
+        key: "category",
+        label: "카테고리",
+        render: (row) => (
+          <Badge variant={getCategoryVariant(row.category)}>
+            {row.category}
+          </Badge>
+        ),
+      },
+      {
+        key: "status",
+        label: "상태",
+        render: (row) => {
+          const { label, variant } = getStatusInfo(row.status);
+          return <Badge variant={variant}>{label}</Badge>;
+        },
+      },
+      {
+        key: "views",
+        label: "조회수",
+        render: (row) => row.views.toLocaleString(),
+      },
+      { key: "createdAt", label: "작성일" },
+      {
+        key: "actions",
+        label: "관리",
+        render: (row) => {
+          return (
+            <div className="flex gap-1">
+              <Button size="sm">수정</Button>
+              {row.status === "published" && (
+                <Button
+                  onClick={() => handleClickArchive(row.id)}
+                  variant="secondary"
+                  size="sm"
+                >
+                  보관
+                </Button>
+              )}
+              {row.status === "archived" && (
+                <Button
+                  onClick={() => handleClickRestore(row.id)}
+                  variant="primary"
+                  size="sm"
+                >
+                  복원
+                </Button>
+              )}
+              {row.status === "draft" && (
+                <Button
+                  onClick={() => handleClickPublish(row.id)}
+                  variant="success"
+                  size="sm"
+                >
+                  게시
+                </Button>
+              )}
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => handleClickDelete(row.id)}
+              >
+                삭제
+              </Button>
+            </div>
+          );
+        },
+      },
+    ];
+  }, [addAlert, fetchPosts]);
 
   return (
     <div className="flex w-full flex-col gap-4">

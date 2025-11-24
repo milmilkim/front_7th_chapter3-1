@@ -1,9 +1,11 @@
+import { useMemo } from "react";
 import { useUsers } from "@/hooks/useUsers";
 import StatCard from "@/components/stat-card";
 import { DataTable, type Column } from "@/components/data-table";
-import type { User as UserType } from "@/services/userService";
+import { userService, type User as UserType } from "@/services/userService";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useAlert } from "@/hooks/useAlert";
 
 const getRoleInfo = (role: UserType["role"]) => {
   switch (role) {
@@ -31,50 +33,66 @@ const getStatusInfo = (status: UserType["status"]) => {
   }
 };
 
-const columns: Column<UserType>[] = [
-  { key: "id", label: "ID" },
-  { key: "username", label: "이름" },
-  { key: "email", label: "이메일" },
-  {
-    key: "role",
-    label: "역할",
-    render: (row) => {
-      const { label, variant } = getRoleInfo(row.role);
-      return <Badge variant={variant}>{label}</Badge>;
-    },
-  },
-  {
-    key: "status",
-    label: "상태",
-    render: (row) => {
-      const { label, variant } = getStatusInfo(row.status);
-      return <Badge variant={variant}>{label}</Badge>;
-    },
-  },
-  { key: "createdAt", label: "가입일" },
-  {
-    key: "lastLogin",
-    label: "마지막 로그인",
-    render: (row) => row.lastLogin || "-",
-  },
-  {
-    key: "actions",
-    label: "관리",
-    render: () => {
-      return (
-        <>
-          <Button size="sm">수정</Button>{" "}
-          <Button variant="danger" size="sm">
-            삭제
-          </Button>
-        </>
-      );
-    },
-  },
-];
-
 const User = () => {
-  const { users, stats } = useUsers();
+  const { users, stats, fetchUsers } = useUsers();
+  const { addAlert } = useAlert();
+
+  const columns = useMemo<Column<UserType>[]>(() => {
+    const handleClickDelete = async (id: number) => {
+      const confirmed = confirm("정말 삭제하시겠습니까?");
+      if (confirmed) {
+        await userService.delete(id);
+        addAlert("성공", "삭제되었습니다", "success");
+        fetchUsers();
+      }
+    };
+
+    return [
+      { key: "id", label: "ID" },
+      { key: "username", label: "이름" },
+      { key: "email", label: "이메일" },
+      {
+        key: "role",
+        label: "역할",
+        render: (row) => {
+          const { label, variant } = getRoleInfo(row.role);
+          return <Badge variant={variant}>{label}</Badge>;
+        },
+      },
+      {
+        key: "status",
+        label: "상태",
+        render: (row) => {
+          const { label, variant } = getStatusInfo(row.status);
+          return <Badge variant={variant}>{label}</Badge>;
+        },
+      },
+      { key: "createdAt", label: "가입일" },
+      {
+        key: "lastLogin",
+        label: "마지막 로그인",
+        render: (row) => row.lastLogin || "-",
+      },
+      {
+        key: "actions",
+        label: "관리",
+        render: (row) => {
+          return (
+            <>
+              <Button size="sm">수정</Button>{" "}
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => handleClickDelete(row.id)}
+              >
+                삭제
+              </Button>
+            </>
+          );
+        },
+      },
+    ];
+  }, [addAlert, fetchUsers]);
 
   return (
     <div className="flex w-full flex-col gap-4">
