@@ -10,10 +10,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import PostForm from "@/components/post-form";
+import PostForm, { type PostFormValues } from "@/components/post-form";
 import { Alert, AlertDescription } from "../ui/alert";
 import { useCallback, useEffect, useState } from "react";
 import { userService, type User } from "@/services/userService";
+import { Form } from "../ui/form";
+import { useForm } from "react-hook-form";
 
 interface EditUserModalProps {
   open: boolean;
@@ -24,12 +26,23 @@ interface EditUserModalProps {
 const EditUserModal = ({ open, onClose, id }: EditUserModalProps) => {
   const { addAlert } = useAlert();
   const [user, setUser] = useState<User | null>(null);
-  const handleCreatePost = () => {
+
+  const form = useForm<PostFormValues>({
+    defaultValues: {
+      title: "",
+      username: "",
+      category: "",
+      content: "",
+    },
+  });
+
+  const onSubmit = (data: PostFormValues) => {
+    console.log(data);
     addAlert("성공", "사용자가 수정되었습니다", "success");
     onClose?.();
   };
 
-  const fetchPost = useCallback(async () => {
+  const fetchUser = useCallback(async () => {
     const user = await userService.getById(id);
     if (user) {
       setUser(user);
@@ -37,31 +50,35 @@ const EditUserModal = ({ open, onClose, id }: EditUserModalProps) => {
   }, [id]);
 
   useEffect(() => {
-    fetchPost();
-  }, [id, fetchPost]);
+    fetchUser();
+  }, [id, fetchUser]);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="">
-        <DialogHeader>
-          <DialogTitle>게시글 수정</DialogTitle>
-        </DialogHeader>
-        <DialogBody>
-          <Alert variant="info" className="mb-4">
-            <AlertDescription>
-              ID: {user?.id} | 생성일: {user?.createdAt}
-            </AlertDescription>
-          </Alert>
-          <PostForm />
-        </DialogBody>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="secondary">취소</Button>
-          </DialogClose>
-          <Button onClick={handleCreatePost} variant="primary">
-            수정 완료
-          </Button>
-        </DialogFooter>
+      <DialogContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <DialogHeader>
+              <DialogTitle>사용자 수정</DialogTitle>
+            </DialogHeader>
+            <DialogBody>
+              <Alert variant="info" className="mb-4">
+                <AlertDescription>
+                  ID: {user?.id} | 생성일: {user?.createdAt}
+                </AlertDescription>
+              </Alert>
+              <PostForm form={form} />
+            </DialogBody>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="secondary">취소</Button>
+              </DialogClose>
+              <Button type="submit" variant="primary">
+                수정 완료
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
