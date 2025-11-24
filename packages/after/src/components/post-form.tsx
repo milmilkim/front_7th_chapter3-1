@@ -61,7 +61,6 @@ const PostForm = ({ form }: PostFormProps) => {
           name="category"
           label="카테고리"
           placeholder="카테고리 선택"
-          className="w-full"
           options={[
             { value: "development", label: "Development" },
             { value: "design", label: "Design" },

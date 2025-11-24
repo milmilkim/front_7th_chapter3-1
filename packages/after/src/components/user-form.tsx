@@ -57,7 +57,6 @@ const UserForm = ({ form }: UserFormProps) => {
       />
       <div className="grid grid-cols-2 items-start gap-3">
         <FormSelect
-          className="w-full"
           control={control}
           name="role"
           label="역할"
@@ -69,7 +68,6 @@ const UserForm = ({ form }: UserFormProps) => {
           ]}
         />
         <FormSelect
-          className="w-full"
           control={control}
           name="status"
           label="상태"
