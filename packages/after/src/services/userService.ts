@@ -24,6 +24,22 @@ const saveUsers = (users: User[]) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
 };
 
+export interface UserStats {
+  total: number;
+  active: number;
+  inactive: number;
+  suspended: number;
+  admin: number;
+}
+
+export const calculateUserStats = (users: User[]): UserStats => ({
+  total: users.length,
+  active: users.filter((user) => user.status === "active").length,
+  inactive: users.filter((user) => user.status === "inactive").length,
+  suspended: users.filter((user) => user.status === "suspended").length,
+  admin: users.filter((user) => user.role === "admin").length,
+});
+
 export const userService = {
   async getAll(): Promise<User[]> {
     return getUsers();

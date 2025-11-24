@@ -27,6 +27,22 @@ const savePosts = (posts: Post[]) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
 };
 
+export interface PostStats {
+  total: number;
+  published: number;
+  archived: number;
+  draft: number;
+  views: number;
+}
+
+export const calculatePostStats = (posts: Post[]): PostStats => ({
+  total: posts.length,
+  published: posts.filter((post) => post.status === "published").length,
+  archived: posts.filter((post) => post.status === "archived").length,
+  draft: posts.filter((post) => post.status === "draft").length,
+  views: posts.reduce((sum, post) => sum + post.views, 0),
+});
+
 export const postService = {
   async getAll(): Promise<Post[]> {
     return getPosts();
