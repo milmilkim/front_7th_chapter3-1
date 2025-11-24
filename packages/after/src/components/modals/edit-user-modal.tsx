@@ -25,7 +25,7 @@ const EditUserModal = ({ open, onClose, id }: EditUserModalProps) => {
   const { addAlert } = useAlert();
   const [user, setUser] = useState<User | null>(null);
   const handleCreatePost = () => {
-    addAlert("성공", "게시글이 수정되었습니다", "success");
+    addAlert("성공", "사용자가 수정되었습니다", "success");
     onClose?.();
   };
 
