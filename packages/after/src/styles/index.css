@@ -10,6 +10,11 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* Z-index scale */
+  --z-header: 50;
+  --z-modal: 50;
+  --z-dropdown: 50;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

@@ -2,7 +2,7 @@ import { ModeToggle } from "./mode-toggle";
 
 export const Header: React.FC = () => {
   return (
-    <header className="sticky top-0 z-50 items-center justify-center border-b bg-card shadow-sm">
+    <header className="sticky top-0 z-header items-center justify-center border-b bg-card shadow-sm">
       <div className="m-auto my-0 flex h-16 max-w-[1400px] justify-between px-6">
         {/* Logo */}
         <div className="flex items-center gap-3">
