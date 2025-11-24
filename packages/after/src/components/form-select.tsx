@@ -40,12 +40,12 @@ export function FormSelect<T extends FieldValues>({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <Select onValueChange={field.onChange} value={field.value}>
             <FormControl>
-              <SelectTrigger className={className}>
+              <SelectTrigger className={className} aria-invalid={fieldState.invalid}>
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>

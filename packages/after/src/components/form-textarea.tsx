@@ -26,11 +26,11 @@ export function FormTextarea<T extends FieldValues>({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Textarea {...field} {...props} />
+            <Textarea {...field} {...props} aria-invalid={fieldState.invalid} />
           </FormControl>
           <FormMessage />
         </FormItem>
