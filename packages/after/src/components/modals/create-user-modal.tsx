@@ -47,6 +47,7 @@ const CreateUserModal = ({ open, onClose }: CreateUserModalProps) => {
                   id="category"
                   name="category"
                   onChange={(value) => console.log(value)}
+                  placeholder="카테고리 선택"
                   options={[
                     { value: "development", label: "Development" },
                     { value: "design", label: "Design" },
@@ -67,9 +68,9 @@ const CreateUserModal = ({ open, onClose }: CreateUserModalProps) => {
         </DialogBody>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="secondary">Cancel</Button>
+            <Button variant="secondary">취소</Button>
           </DialogClose>
-          <Button variant="primary">Save changes</Button>
+          <Button variant="primary">생성</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
