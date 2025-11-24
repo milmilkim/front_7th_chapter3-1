@@ -13,6 +13,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+type UserData = {
+  name: string;
+  email: string;
+};
+
 export const Default: Story = {
   args: {
     columns: [
@@ -20,9 +25,7 @@ export const Default: Story = {
       {
         key: "email",
         label: "이메일",
-        render: (value: string) => (
-          <span className="text-primary">{value}</span>
-        ),
+        render: (row) => <span className="text-primary">{(row as UserData).email}</span>,
       },
     ],
     data: [
