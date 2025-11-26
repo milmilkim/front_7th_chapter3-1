@@ -18,6 +18,7 @@ import PostForm, {
 import { Form } from "../ui/form";
 import { z } from "zod";
 import { useForm, type FieldErrors } from "react-hook-form";
+import { postService } from "@/services/postService";
 
 interface CreatePostModalProps {
   open: boolean;
@@ -39,11 +40,22 @@ const CreatePostModal = ({ open, onClose, onSuccess }: CreatePostModalProps) => 
     },
   });
 
-  const onSubmit = (data: PostFormValues) => {
-    console.log(data);
-    addAlert("성공", "게시글이 생성되었습니다", "success");
-    onSuccess?.();
-    onClose?.();
+  const onSubmit = async (data: PostFormValues) => {
+    try {
+      await postService.create({
+        title: data.title,
+        author: data.username,
+        category: data.category,
+        content: data.content,
+        status: "draft",
+      });
+      addAlert("성공", "게시글이 생성되었습니다", "success");
+      onSuccess?.();
+      onClose?.();
+    } catch (error) {
+      console.error(error);
+      addAlert("실패", "게시글 생성에 실패했습니다", "error");
+    }
   };
 
   const onError = (errors: FieldErrors<z.infer<typeof postFormSchema>>) => {
