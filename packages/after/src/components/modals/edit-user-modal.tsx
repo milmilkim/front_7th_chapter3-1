@@ -16,16 +16,24 @@ import { userService, type User } from "@/services/userService";
 import { Form } from "../ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import UserForm, { userFormSchema, type UserFormValues } from "@/forms/user-form";
+import UserForm, {
+  userFormSchema,
+  type UserFormValues,
+} from "@/forms/user-form";
 
 interface EditUserModalProps {
   open: boolean;
   onClose?: () => void;
   onSuccess?: () => void;
-  id: number;
+  selectedId: number;
 }
 
-const EditUserModal = ({ open, onClose, onSuccess, id }: EditUserModalProps) => {
+const EditUserModal = ({
+  open,
+  onClose,
+  onSuccess,
+  selectedId,
+}: EditUserModalProps) => {
   const { addAlert } = useAlert();
   const [user, setUser] = useState<User | null>(null);
 
@@ -41,7 +49,7 @@ const EditUserModal = ({ open, onClose, onSuccess, id }: EditUserModalProps) => 
   });
 
   const fetchUser = useCallback(async () => {
-    const user = await userService.getById(id);
+    const user = await userService.getById(selectedId);
     if (user) {
       setUser(user);
       form.reset({
@@ -51,11 +59,11 @@ const EditUserModal = ({ open, onClose, onSuccess, id }: EditUserModalProps) => 
         status: user.status,
       });
     }
-  }, [id, form]);
+  }, [selectedId, form]);
 
   const onSubmit = async (data: UserFormValues) => {
     try {
-      await userService.update(id, {
+      await userService.update(selectedId, {
         username: data.username,
         email: data.email,
         role: data.role as User["role"],
@@ -72,7 +80,7 @@ const EditUserModal = ({ open, onClose, onSuccess, id }: EditUserModalProps) => 
 
   useEffect(() => {
     fetchUser();
-  }, [id, fetchUser]);
+  }, [selectedId, fetchUser]);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>

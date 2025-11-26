@@ -165,14 +165,12 @@ const Post = () => {
         </Button>
       </div>
       <DataTable columns={columns} data={posts} keyField="id" />
-      {selectedPostId && (
-        <EditPostModal
-          open={isEditPostModalOpen}
-          onClose={() => setIsEditPostModalOpen(false)}
-          onSuccess={fetchPosts}
-          id={selectedPostId}
-        />
-      )}
+      <EditPostModal
+        open={isEditPostModalOpen && !!selectedPostId}
+        onClose={() => setIsEditPostModalOpen(false)}
+        onSuccess={fetchPosts}
+        selectedId={selectedPostId!}
+      />
       <CreatePostModal
         open={isCreatePostModalOpen}
         onClose={() => setIsCreatePostModalOpen(false)}

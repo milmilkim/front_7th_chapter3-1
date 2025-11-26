@@ -10,7 +10,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import PostForm, { postFormSchema, type PostFormValues } from "@/forms/post-form";
+import PostForm, {
+  postFormSchema,
+  type PostFormValues,
+} from "@/forms/post-form";
 import { Alert, AlertDescription } from "../ui/alert";
 import { useCallback, useEffect, useState } from "react";
 import { postService, type Post } from "@/services/postService";
@@ -22,14 +25,14 @@ interface EditPostModalProps {
   open: boolean;
   onClose?: () => void;
   onSuccess?: () => void;
-  id: number;
+  selectedId: number;
 }
 
 const EditPostModal = ({
   open,
   onClose,
   onSuccess,
-  id,
+  selectedId,
 }: EditPostModalProps) => {
   const { addAlert } = useAlert();
   const [post, setPost] = useState<Post | null>(null);
@@ -40,7 +43,7 @@ const EditPostModal = ({
   });
 
   const fetchPost = useCallback(async () => {
-    const post = await postService.getById(id);
+    const post = await postService.getById(selectedId);
     if (post) {
       setPost(post);
       form.reset({
@@ -50,11 +53,11 @@ const EditPostModal = ({
         content: post.content,
       });
     }
-  }, [id, form]);
+  }, [selectedId, form]);
 
   const onSubmit = async (data: PostFormValues) => {
     try {
-      await postService.update(id, data);
+      await postService.update(selectedId, data);
       addAlert("성공", "게시글이 수정되었습니다", "success");
       onSuccess?.();
       onClose?.();
@@ -66,7 +69,7 @@ const EditPostModal = ({
 
   useEffect(() => {
     fetchPost();
-  }, [id, fetchPost]);
+  }, [selectedId, fetchPost]);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>

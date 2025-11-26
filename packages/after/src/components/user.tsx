@@ -126,9 +126,9 @@ const User = () => {
       <DataTable columns={columns} data={users} keyField="id" />
       {selectedUserId && (
         <EditUserModal
-          open={isEditUserModalOpen}
+          open={isEditUserModalOpen && !!selectedUserId}
           onClose={() => setIsEditUserModalOpen(false)}
-          id={selectedUserId}
+          selectedId={selectedUserId!}
           onSuccess={fetchUsers}
         />
       )}
