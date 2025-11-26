@@ -24,7 +24,7 @@ export const Header: React.FC = () => {
         <div className="flex items-center gap-3">
           <ModeToggle />
 
-          <div className="text-right">
+          <div className="hidden text-right sm:block">
             <div className="text-sm font-semibold text-foreground">
               Demo User
             </div>

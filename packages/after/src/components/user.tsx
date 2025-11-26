@@ -108,7 +108,7 @@ const User = () => {
 
   return (
     <div className="flex w-full flex-col gap-4">
-      <div className="flex w-full gap-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
         <StatCard label="전체" value={stats.total} variant="primary" />
         <StatCard label="활성" value={stats.active} variant="success" />
         <StatCard label="비활성" value={stats.inactive} variant="warning" />
@@ -116,7 +116,10 @@ const User = () => {
         <StatCard label="관리자" value={stats.admin} variant="secondary" />
       </div>
       <div className="flex justify-end">
-        <Button onClick={() => setIsCreateUserModalOpen(true)} variant="primary">
+        <Button
+          onClick={() => setIsCreateUserModalOpen(true)}
+          variant="primary"
+        >
           새로 만들기
         </Button>
       </div>
