@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useUsers } from "@/hooks/useUsers";
 import StatCard from "@/components/stat-card";
 import { DataTable, type Column } from "@/components/data-table";
@@ -35,6 +35,16 @@ const getStatusInfo = (status: UserType["status"]) => {
   }
 };
 
+const RoleBadge = ({ role }: { role: UserType["role"] }) => {
+  const { label, variant } = getRoleInfo(role);
+  return <Badge variant={variant}>{label}</Badge>;
+};
+
+const StatusBadge = ({ status }: { status: UserType["status"] }) => {
+  const { label, variant } = getStatusInfo(status);
+  return <Badge variant={variant}>{label}</Badge>;
+};
+
 const User = () => {
   const { users, stats, fetchUsers } = useUsers();
   const { addAlert } = useAlert();
@@ -42,69 +52,59 @@ const User = () => {
   const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false);
   const [isCreateUserModalOpen, setIsCreateUserModalOpen] = useState(false);
 
-  const columns = useMemo<Column<UserType>[]>(() => {
-    const handleClickDelete = async (id: number) => {
-      const confirmed = confirm("정말 삭제하시겠습니까?");
-      if (confirmed) {
-        await userService.delete(id);
-        addAlert("성공", "삭제되었습니다", "success");
-        fetchUsers();
-      }
-    };
+  const handleDelete = async (id: number) => {
+    const confirmed = confirm("정말 삭제하시겠습니까?");
+    if (confirmed) {
+      await userService.delete(id);
+      addAlert("성공", "삭제되었습니다", "success");
+      fetchUsers();
+    }
+  };
 
-    const handleClickEdit = (id: number) => {
-      setSelectedUserId(id);
-      setIsEditUserModalOpen(true);
-    };
+  const handleEdit = (id: number) => {
+    setSelectedUserId(id);
+    setIsEditUserModalOpen(true);
+  };
 
-    return [
-      { key: "id", label: "ID" },
-      { key: "username", label: "이름" },
-      { key: "email", label: "이메일" },
-      {
-        key: "role",
-        label: "역할",
-        render: (row) => {
-          const { label, variant } = getRoleInfo(row.role);
-          return <Badge variant={variant}>{label}</Badge>;
-        },
-      },
-      {
-        key: "status",
-        label: "상태",
-        render: (row) => {
-          const { label, variant } = getStatusInfo(row.status);
-          return <Badge variant={variant}>{label}</Badge>;
-        },
-      },
-      { key: "createdAt", label: "가입일" },
-      {
-        key: "lastLogin",
-        label: "마지막 로그인",
-        render: (row) => row.lastLogin || "-",
-      },
-      {
-        key: "actions",
-        label: "관리",
-        render: (row) => {
-          return (
-            <>
-              <Button size="sm" onClick={() => handleClickEdit(row.id)}>
-                수정
-              </Button>{" "}
-              <Button
-                variant="danger"
-                size="sm"
-                onClick={() => handleClickDelete(row.id)}
-              >
-                삭제
-              </Button>
-            </>
-          );
-        },
-      },
-    ];
-  }, [addAlert, fetchUsers]);
+  const columns: Column<UserType>[] = [
+    { key: "id", label: "ID" },
+    { key: "username", label: "이름" },
+    { key: "email", label: "이메일" },
+    {
+      key: "role",
+      label: "역할",
+      render: (row) => <RoleBadge role={row.role} />,
+    },
+    {
+      key: "status",
+      label: "상태",
+      render: (row) => <StatusBadge status={row.status} />,
+    },
+    { key: "createdAt", label: "가입일" },
+    {
+      key: "lastLogin",
+      label: "마지막 로그인",
+      render: (row) => row.lastLogin || "-",
+    },
+    {
+      key: "actions",
+      label: "관리",
+      render: (row) => (
+        <>
+          <Button size="sm" onClick={() => handleEdit(row.id)}>
+            수정
+          </Button>{" "}
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={() => handleDelete(row.id)}
+          >
+            삭제
+          </Button>
+        </>
+      ),
+    },
+  ];
 
   return (
     <div className="flex w-full flex-col gap-4">
