@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import PostForm, { postFormSchema, type PostFormValues } from "@/components/post-form";
+import PostForm, { postFormSchema, type PostFormValues } from "@/forms/post-form";
 import { Alert, AlertDescription } from "../ui/alert";
 import { useCallback, useEffect, useState } from "react";
 import { postService, type Post } from "@/services/postService";

@@ -1,43 +1,12 @@
 import type { UseFormReturn } from "react-hook-form";
-import { FormInput } from "./form-input";
-import { FormSelect } from "./form-select";
-import { FormTextarea } from "./form-textarea";
-import { z } from "zod";
-
-export interface PostFormValues {
-  title: string;
-  username: string;
-  category: string;
-  content: string;
-}
+import { FormInput } from "@/components/form-input";
+import { FormSelect } from "@/components/form-select";
+import { FormTextarea } from "@/components/form-textarea";
+import { postFormSchema, type PostFormValues } from "./schemas";
 
 interface PostFormProps {
   form: UseFormReturn<PostFormValues>;
 }
-
-// eslint-disable-next-line react-refresh/only-export-components
-export const postFormSchema = z.object({
-  title: z
-    .string()
-    .min(5, "제목은 5자 이상이어야 합니다")
-    .max(100, "제목은 100자 이하여야 합니다"),
-  username: z
-    .string()
-    .min(3, "사용자명은 3자 이상이어야 합니다")
-    .max(20, "사용자명은 20자 이하여야 합니다")
-    .regex(/^[a-zA-Z0-9_]+$/, "영문, 숫자, 언더스코어만 사용 가능합니다")
-    .refine(
-      (val) => {
-        const reserved = ["admin", "root", "system", "administrator"];
-        return !reserved.includes(val.toLowerCase());
-      },
-      {
-        message: "예약된 사용자명입니다",
-      },
-    ),
-  category: z.string(),
-  content: z.string(),
-});
 
 const PostForm = ({ form }: PostFormProps) => {
   const { control } = form;
@@ -82,3 +51,4 @@ const PostForm = ({ form }: PostFormProps) => {
 };
 
 export default PostForm;
+export { postFormSchema, type PostFormValues };

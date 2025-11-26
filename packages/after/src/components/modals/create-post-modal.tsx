@@ -14,7 +14,7 @@ import {
 import PostForm, {
   postFormSchema,
   type PostFormValues,
-} from "@/components/post-form";
+} from "@/forms/post-form";
 import { Form } from "../ui/form";
 import { z } from "zod";
 import { useForm, type FieldErrors } from "react-hook-form";

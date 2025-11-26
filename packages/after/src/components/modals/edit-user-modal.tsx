@@ -16,7 +16,7 @@ import { userService, type User } from "@/services/userService";
 import { Form } from "../ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import UserForm, { userFormSchema, type UserFormValues } from "../user-form";
+import UserForm, { userFormSchema, type UserFormValues } from "@/forms/user-form";
 
 interface EditUserModalProps {
   open: boolean;
