@@ -5,6 +5,7 @@ import {
   type Post,
   type PostStats,
 } from "@/services/postService";
+import { useAlert } from "./useAlert";
 
 export const usePosts = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -15,11 +16,17 @@ export const usePosts = () => {
     draft: 0,
     views: 0,
   });
+  const { addAlert } = useAlert();
 
   const fetchPosts = async () => {
-    const data = await postService.getAll();
-    setPosts(data);
-    setStats(calculatePostStats(data));
+    try {
+      const data = await postService.getAll();
+      setPosts(data);
+      setStats(calculatePostStats(data));
+    } catch (error) {
+      console.error(error);
+      addAlert("실패", "데이터를 불러오는데 실패했습니다", "error");
+    }
   };
 
   useEffect(() => {
