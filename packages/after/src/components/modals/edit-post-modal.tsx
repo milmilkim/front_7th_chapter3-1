@@ -46,7 +46,7 @@ const EditPostModal = ({
       setPost(post);
       form.reset({
         title: post.title,
-        username: post.author,
+        author: post.author,
         category: post.category,
         content: post.content,
       });
