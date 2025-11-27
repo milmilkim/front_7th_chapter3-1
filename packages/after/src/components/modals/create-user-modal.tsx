@@ -1,4 +1,3 @@
-import { useAlert } from "@/hooks/useAlert";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,17 +13,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type z from "zod";
 import { Form } from "../ui/form";
-import { userService, type User } from "@/services/userService";
 
 interface CreateUserModalProps {
   open: boolean;
   onClose?: () => void;
-  onSuccess?: () => void;
+  onSubmit: (data: UserFormValues) => void | Promise<void>;
 }
 
-const CreateUserModal = ({ open, onClose, onSuccess }: CreateUserModalProps) => {
-  const { addAlert } = useAlert();
-
+const CreateUserModal = ({ open, onClose, onSubmit }: CreateUserModalProps) => {
   const form = useForm<z.infer<typeof userFormSchema>>({
     resolver: zodResolver(userFormSchema),
     mode: "onChange",
@@ -36,28 +32,17 @@ const CreateUserModal = ({ open, onClose, onSuccess }: CreateUserModalProps) => 
     },
   });
 
-  const onSubmit = async (data: UserFormValues) => {
-    try {
-      await userService.create({
-        username: data.username,
-        email: data.email,
-        role: data.role as User["role"],
-        status: data.status as User["status"],
-      });
-      addAlert("성공", "사용자가 생성되었습니다", "success");
-      onSuccess?.();
-      onClose?.();
-    } catch (error) {
-      console.error(error);
-      addAlert("실패", "사용자 생성에 실패했습니다", "error");
-    }
+  const handleSubmit = async (data: UserFormValues) => {
+    await onSubmit(data);
+    form.reset();
+    onClose?.();
   };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={form.handleSubmit(handleSubmit)}>
             <DialogHeader>
               <DialogTitle>새 사용자 만들기</DialogTitle>
             </DialogHeader>

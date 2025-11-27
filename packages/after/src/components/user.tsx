@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useAlert } from "@/hooks/useAlert";
 import EditUserModal from "@/components/modals/edit-user-modal";
 import CreateUserModal from "@/components/modals/create-user-modal";
+import type { UserFormValues } from "@/forms/user-form";
 
 const getRoleInfo = (role: UserType["role"]) => {
   switch (role) {
@@ -64,6 +65,22 @@ const User = () => {
   const handleEdit = (id: number) => {
     setSelectedUserId(id);
     setIsEditUserModalOpen(true);
+  };
+
+  const handleCreateUser = async (data: UserFormValues) => {
+    try {
+      await userService.create({
+        username: data.username,
+        email: data.email,
+        role: data.role as UserType["role"],
+        status: data.status as UserType["status"],
+      });
+      addAlert("성공", "사용자가 생성되었습니다", "success");
+      fetchUsers();
+    } catch (error) {
+      console.error(error);
+      addAlert("실패", "사용자 생성에 실패했습니다", "error");
+    }
   };
 
   const columns: Column<UserType>[] = [
@@ -135,7 +152,7 @@ const User = () => {
       <CreateUserModal
         open={isCreateUserModalOpen}
         onClose={() => setIsCreateUserModalOpen(false)}
-        onSuccess={fetchUsers}
+        onSubmit={handleCreateUser}
       />
     </div>
   );

@@ -1,4 +1,3 @@
-import { useAlert } from "@/hooks/useAlert";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -18,17 +17,14 @@ import PostForm, {
 import { Form } from "../ui/form";
 import { z } from "zod";
 import { useForm, type FieldErrors } from "react-hook-form";
-import { postService } from "@/services/postService";
 
 interface CreatePostModalProps {
   open: boolean;
   onClose?: () => void;
-  onSuccess?: () => void;
+  onSubmit: (data: PostFormValues) => void | Promise<void>;
 }
 
-const CreatePostModal = ({ open, onClose, onSuccess }: CreatePostModalProps) => {
-  const { addAlert } = useAlert();
-
+const CreatePostModal = ({ open, onClose, onSubmit }: CreatePostModalProps) => {
   const form = useForm<z.infer<typeof postFormSchema>>({
     resolver: zodResolver(postFormSchema),
     mode: "onChange",
@@ -40,22 +36,10 @@ const CreatePostModal = ({ open, onClose, onSuccess }: CreatePostModalProps) => 
     },
   });
 
-  const onSubmit = async (data: PostFormValues) => {
-    try {
-      await postService.create({
-        title: data.title,
-        author: data.username,
-        category: data.category,
-        content: data.content,
-        status: "draft",
-      });
-      addAlert("성공", "게시글이 생성되었습니다", "success");
-      onSuccess?.();
-      onClose?.();
-    } catch (error) {
-      console.error(error);
-      addAlert("실패", "게시글 생성에 실패했습니다", "error");
-    }
+  const handleSubmit = async (data: PostFormValues) => {
+    await onSubmit(data);
+    form.reset();
+    onClose?.();
   };
 
   const onError = (errors: FieldErrors<z.infer<typeof postFormSchema>>) => {
@@ -66,7 +50,7 @@ const CreatePostModal = ({ open, onClose, onSuccess }: CreatePostModalProps) => 
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit, onError)}>
+          <form onSubmit={form.handleSubmit(handleSubmit, onError)}>
             <DialogHeader>
               <DialogTitle>새 게시글 만들기</DialogTitle>
             </DialogHeader>

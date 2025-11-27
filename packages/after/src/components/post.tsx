@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useAlert } from "@/hooks/useAlert";
 import EditPostModal from "@/components/modals/edit-post-modal";
 import CreatePostModal from "@/components/modals/create-post-modal";
+import type { PostFormValues } from "@/forms/post-form";
 
 const getStatusInfo = (status: PostType["status"]) => {
   switch (status) {
@@ -78,6 +79,23 @@ const Post = () => {
   const handleEdit = (id: number) => {
     setSelectedPostId(id);
     setIsEditPostModalOpen(true);
+  };
+
+  const handleCreatePost = async (data: PostFormValues) => {
+    try {
+      await postService.create({
+        title: data.title,
+        author: data.username,
+        category: data.category,
+        content: data.content,
+        status: "draft",
+      });
+      addAlert("성공", "게시글이 생성되었습니다", "success");
+      fetchPosts();
+    } catch (error) {
+      console.error(error);
+      addAlert("실패", "게시글 생성에 실패했습니다", "error");
+    }
   };
 
   const columns: Column<PostType>[] = [
@@ -174,7 +192,7 @@ const Post = () => {
       <CreatePostModal
         open={isCreatePostModalOpen}
         onClose={() => setIsCreatePostModalOpen(false)}
-        onSuccess={fetchPosts}
+        onSubmit={handleCreatePost}
       />
     </div>
   );
