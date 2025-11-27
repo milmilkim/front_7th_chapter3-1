@@ -103,7 +103,7 @@ const WithValidationComponent = () => {
 
   return (
     <Form {...form}>
-      <form className="w-[450px] space-y-4">
+      <form onSubmit={form.handleSubmit(() => {})} className="w-[450px] space-y-4">
         <FormTextarea
           control={form.control}
           name="content"
