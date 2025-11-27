@@ -110,47 +110,57 @@ export const Status: Story = {
   },
 };
 
-export const WithValidation: Story = {
-  render: () => {
-    const form = useForm({
-      resolver: zodResolver(formSchema),
-      mode: "onChange",
-      defaultValues: {
-        category: "",
-        role: "",
-        status: "",
-      },
-    });
+const WithValidationComponent = () => {
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    mode: "onChange",
+    defaultValues: {
+      category: "",
+      role: "",
+      status: "",
+    },
+  });
 
-    return (
-      <Form {...form}>
-        <form className="w-[350px] space-y-4">
-          <FormSelect
-            control={form.control}
-            name="category"
-            label="카테고리"
-            options={categoryOptions}
-            placeholder="카테고리를 선택하세요"
-            required
-          />
-          <FormSelect
-            control={form.control}
-            name="role"
-            label="역할"
-            options={roleOptions}
-            placeholder="역할을 선택하세요"
-            required
-          />
-          <FormSelect
-            control={form.control}
-            name="status"
-            label="상태"
-            options={statusOptions}
-            placeholder="상태를 선택하세요"
-            required
-          />
-        </form>
-      </Form>
-    );
+  return (
+    <Form {...form}>
+      <form className="w-[350px] space-y-4">
+        <FormSelect
+          control={form.control}
+          name="category"
+          label="카테고리"
+          options={categoryOptions}
+          placeholder="카테고리를 선택하세요"
+          required
+        />
+        <FormSelect
+          control={form.control}
+          name="role"
+          label="역할"
+          options={roleOptions}
+          placeholder="역할을 선택하세요"
+          required
+        />
+        <FormSelect
+          control={form.control}
+          name="status"
+          label="상태"
+          options={statusOptions}
+          placeholder="상태를 선택하세요"
+          required
+        />
+        <Button type="submit">제출</Button>
+      </form>
+    </Form>
+  );
+};
+
+export const WithValidation = {
+  render: () => <WithValidationComponent />,
+  parameters: {
+    docs: {
+      source: {
+        code: 'See component source',
+      },
+    },
   },
 };

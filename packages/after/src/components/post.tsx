@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useAlert } from "@/hooks/useAlert";
 import EditPostModal from "@/components/modals/edit-post-modal";
 import CreatePostModal from "@/components/modals/create-post-modal";
-import type { PostFormValues } from "@/forms/post-form";
+import type { PostFormValues } from "@/components/forms/post-form";
 
 const getStatusInfo = (status: PostType["status"]) => {
   switch (status) {

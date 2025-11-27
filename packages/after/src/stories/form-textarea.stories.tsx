@@ -90,44 +90,54 @@ export const Bio: Story = {
   },
 };
 
-export const WithValidation: Story = {
-  render: () => {
-    const form = useForm({
-      resolver: zodResolver(formSchema),
-      mode: "onChange",
-      defaultValues: {
-        content: "짧음", // Invalid - too short
-        description: "",
-        bio: "",
-      },
-    });
+const WithValidationComponent = () => {
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    mode: "onChange",
+    defaultValues: {
+      content: "짧음", // Invalid - too short
+      description: "",
+      bio: "",
+    },
+  });
 
-    return (
-      <Form {...form}>
-        <form className="w-[450px] space-y-4">
-          <FormTextarea
-            control={form.control}
-            name="content"
-            label="내용 (최소 10자)"
-            placeholder="최소 10자 이상 입력하세요..."
-            required
-          />
-          <FormTextarea
-            control={form.control}
-            name="description"
-            label="설명 (최대 200자)"
-            placeholder="최대 200자까지 입력 가능합니다..."
-            rows={5}
-          />
-          <FormTextarea
-            control={form.control}
-            name="bio"
-            label="자기소개"
-            placeholder="선택사항입니다..."
-            rows={6}
-          />
-        </form>
-      </Form>
-    );
+  return (
+    <Form {...form}>
+      <form className="w-[450px] space-y-4">
+        <FormTextarea
+          control={form.control}
+          name="content"
+          label="내용 (최소 10자)"
+          placeholder="최소 10자 이상 입력하세요..."
+          required
+        />
+        <FormTextarea
+          control={form.control}
+          name="description"
+          label="설명 (최대 200자)"
+          placeholder="최대 200자까지 입력 가능합니다..."
+          rows={5}
+        />
+        <FormTextarea
+          control={form.control}
+          name="bio"
+          label="자기소개"
+          placeholder="선택사항입니다..."
+          rows={6}
+        />
+        <Button type="submit">제출</Button>
+      </form>
+    </Form>
+  );
+};
+
+export const WithValidation = {
+  render: () => <WithValidationComponent />,
+  parameters: {
+    docs: {
+      source: {
+        code: 'See component source',
+      },
+    },
   },
 };

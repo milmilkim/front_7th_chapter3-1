@@ -91,44 +91,54 @@ export const Number: Story = {
   },
 };
 
-export const WithValidation: Story = {
-  render: () => {
-    const form = useForm({
-      resolver: zodResolver(formSchema),
-      mode: "onChange",
-      defaultValues: {
-        username: "ab", // Invalid - too short
-        email: "invalid-email",
-        age: "not-a-number",
-      },
-    });
+const WithValidationComponent = () => {
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    mode: "onChange",
+    defaultValues: {
+      username: "ab", // Invalid - too short
+      email: "invalid-email",
+      age: "not-a-number",
+    },
+  });
 
-    return (
-      <Form {...form}>
-        <form className="w-[350px] space-y-4">
-          <FormInput
-            control={form.control}
-            name="username"
-            label="사용자명"
-            placeholder="최소 3자 이상"
-            required
-          />
-          <FormInput
-            control={form.control}
-            name="email"
-            label="이메일"
-            placeholder="your@email.com"
-            type="email"
-            required
-          />
-          <FormInput
-            control={form.control}
-            name="age"
-            label="나이"
-            placeholder="숫자만 입력"
-          />
-        </form>
-      </Form>
-    );
+  return (
+    <Form {...form}>
+      <form className="w-[350px] space-y-4">
+        <FormInput
+          control={form.control}
+          name="username"
+          label="사용자명"
+          placeholder="최소 3자 이상"
+          required
+        />
+        <FormInput
+          control={form.control}
+          name="email"
+          label="이메일"
+          placeholder="your@email.com"
+          type="email"
+          required
+        />
+        <FormInput
+          control={form.control}
+          name="age"
+          label="나이"
+          placeholder="숫자만 입력"
+        />
+        <Button type="submit">제출</Button>
+      </form>
+    </Form>
+  );
+};
+
+export const WithValidation = {
+  render: () => <WithValidationComponent />,
+  parameters: {
+    docs: {
+      source: {
+        code: 'See component source',
+      },
+    },
   },
 };

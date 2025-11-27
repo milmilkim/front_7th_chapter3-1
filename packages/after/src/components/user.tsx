@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useAlert } from "@/hooks/useAlert";
 import EditUserModal from "@/components/modals/edit-user-modal";
 import CreateUserModal from "@/components/modals/create-user-modal";
-import type { UserFormValues } from "@/forms/user-form";
+import type { UserFormValues } from "@/components/forms/user-form";
 
 const getRoleInfo = (role: UserType["role"]) => {
   switch (role) {
