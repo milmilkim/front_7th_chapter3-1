@@ -25,7 +25,7 @@ export const AlertProvider = ({ children }: { children: React.ReactNode }) => {
   const addAlert = useCallback(
     (title: string, message: string, variant: AlertVariant) => {
       const id = Date.now();
-      setAlerts((prev) => [...prev, { id, title, message, variant }]);
+      setAlerts([{ id, title, message, variant }]);
     },
     [],
   );
