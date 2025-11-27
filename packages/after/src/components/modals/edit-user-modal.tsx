@@ -1,4 +1,3 @@
-import { useAlert } from "@/hooks/useAlert";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -24,17 +23,16 @@ import UserForm, {
 interface EditUserModalProps {
   open: boolean;
   onClose?: () => void;
-  onSuccess?: () => void;
+  onSubmit: (id: number, data: UserFormValues) => void | Promise<void>;
   selectedId: number;
 }
 
 const EditUserModal = ({
   open,
   onClose,
-  onSuccess,
+  onSubmit,
   selectedId,
 }: EditUserModalProps) => {
-  const { addAlert } = useAlert();
   const [user, setUser] = useState<User | null>(null);
 
   const form = useForm<UserFormValues>({
@@ -61,21 +59,9 @@ const EditUserModal = ({
     }
   }, [selectedId, form]);
 
-  const onSubmit = async (data: UserFormValues) => {
-    try {
-      await userService.update(selectedId, {
-        username: data.username,
-        email: data.email,
-        role: data.role as User["role"],
-        status: data.status as User["status"],
-      });
-      addAlert("성공", "사용자가 수정되었습니다", "success");
-      onSuccess?.();
-      onClose?.();
-    } catch (error) {
-      console.error(error);
-      addAlert("실패", "사용자 수정에 실패했습니다", "error");
-    }
+  const handleSubmit = async (data: UserFormValues) => {
+    await onSubmit(selectedId, data);
+    onClose?.();
   };
 
   useEffect(() => {
@@ -86,7 +72,7 @@ const EditUserModal = ({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={form.handleSubmit(handleSubmit)}>
             <DialogHeader>
               <DialogTitle>사용자 수정</DialogTitle>
             </DialogHeader>

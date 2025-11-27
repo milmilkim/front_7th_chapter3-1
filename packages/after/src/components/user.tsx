@@ -83,6 +83,22 @@ const User = () => {
     }
   };
 
+  const handleEditUser = async (id: number, data: UserFormValues) => {
+    try {
+      await userService.update(id, {
+        username: data.username,
+        email: data.email,
+        role: data.role as UserType["role"],
+        status: data.status as UserType["status"],
+      });
+      addAlert("성공", "사용자가 수정되었습니다", "success");
+      fetchUsers();
+    } catch (error) {
+      console.error(error);
+      addAlert("실패", "사용자 수정에 실패했습니다", "error");
+    }
+  };
+
   const columns: Column<UserType>[] = [
     { key: "id", label: "ID" },
     { key: "username", label: "이름" },
@@ -141,14 +157,12 @@ const User = () => {
         </Button>
       </div>
       <DataTable columns={columns} data={users} keyField="id" />
-      {selectedUserId && (
-        <EditUserModal
-          open={isEditUserModalOpen && !!selectedUserId}
-          onClose={() => setIsEditUserModalOpen(false)}
-          selectedId={selectedUserId!}
-          onSuccess={fetchUsers}
-        />
-      )}
+      <EditUserModal
+        open={isEditUserModalOpen && !!selectedUserId}
+        onClose={() => setIsEditUserModalOpen(false)}
+        selectedId={selectedUserId!}
+        onSubmit={handleEditUser}
+      />
       <CreateUserModal
         open={isCreateUserModalOpen}
         onClose={() => setIsCreateUserModalOpen(false)}

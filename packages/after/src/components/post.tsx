@@ -85,7 +85,7 @@ const Post = () => {
     try {
       await postService.create({
         title: data.title,
-        author: data.username,
+        author: data.author,
         category: data.category,
         content: data.content,
         status: "draft",
@@ -95,6 +95,17 @@ const Post = () => {
     } catch (error) {
       console.error(error);
       addAlert("실패", "게시글 생성에 실패했습니다", "error");
+    }
+  };
+
+  const handleEditPost = async (id: number, data: PostFormValues) => {
+    try {
+      await postService.update(id, data);
+      addAlert("성공", "게시글이 수정되었습니다", "success");
+      fetchPosts();
+    } catch (error) {
+      console.error(error);
+      addAlert("실패", "게시글 수정에 실패했습니다", "error");
     }
   };
 
@@ -186,7 +197,7 @@ const Post = () => {
       <EditPostModal
         open={isEditPostModalOpen && !!selectedPostId}
         onClose={() => setIsEditPostModalOpen(false)}
-        onSuccess={fetchPosts}
+        onSubmit={handleEditPost}
         selectedId={selectedPostId!}
       />
       <CreatePostModal

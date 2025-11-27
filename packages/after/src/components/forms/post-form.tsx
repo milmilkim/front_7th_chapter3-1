@@ -22,7 +22,7 @@ const PostForm = ({ form }: PostFormProps) => {
       <div className="grid grid-cols-2 items-start gap-3">
         <FormInput
           control={control}
-          name="username"
+          name="author"
           label="작성자"
           placeholder="작성자명"
           required
@@ -51,4 +51,5 @@ const PostForm = ({ form }: PostFormProps) => {
 };
 
 export default PostForm;
+// eslint-disable-next-line react-refresh/only-export-components
 export { postFormSchema, type PostFormValues };

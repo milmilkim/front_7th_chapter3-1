@@ -1,4 +1,3 @@
-import { useAlert } from "@/hooks/useAlert";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -24,17 +23,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 interface EditPostModalProps {
   open: boolean;
   onClose?: () => void;
-  onSuccess?: () => void;
+  onSubmit: (id: number, data: PostFormValues) => void | Promise<void>;
   selectedId: number;
 }
 
 const EditPostModal = ({
   open,
   onClose,
-  onSuccess,
+  onSubmit,
   selectedId,
 }: EditPostModalProps) => {
-  const { addAlert } = useAlert();
   const [post, setPost] = useState<Post | null>(null);
 
   const form = useForm<PostFormValues>({
@@ -55,16 +53,9 @@ const EditPostModal = ({
     }
   }, [selectedId, form]);
 
-  const onSubmit = async (data: PostFormValues) => {
-    try {
-      await postService.update(selectedId, data);
-      addAlert("성공", "게시글이 수정되었습니다", "success");
-      onSuccess?.();
-      onClose?.();
-    } catch (error) {
-      console.error(error);
-      addAlert("실패", "게시글 수정에 실패했습니다", "error");
-    }
+  const handleSubmit = async (data: PostFormValues) => {
+    await onSubmit(selectedId, data);
+    onClose?.();
   };
 
   useEffect(() => {
@@ -75,7 +66,7 @@ const EditPostModal = ({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={form.handleSubmit(handleSubmit)}>
             <DialogHeader>
               <DialogTitle>게시글 수정</DialogTitle>
             </DialogHeader>

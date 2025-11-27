@@ -30,7 +30,7 @@ const CreatePostModal = ({ open, onClose, onSubmit }: CreatePostModalProps) => {
     mode: "onChange",
     defaultValues: {
       title: "",
-      username: "",
+      author: "",
       category: "",
       content: "",
     },
