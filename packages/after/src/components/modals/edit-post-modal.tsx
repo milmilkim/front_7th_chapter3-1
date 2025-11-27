@@ -13,7 +13,7 @@ import {
 import PostForm, {
   postFormSchema,
   type PostFormValues,
-} from "@/forms/post-form";
+} from "@/components/forms/post-form";
 import { Alert, AlertDescription } from "../ui/alert";
 import { useCallback, useEffect, useState } from "react";
 import { postService, type Post } from "@/services/postService";

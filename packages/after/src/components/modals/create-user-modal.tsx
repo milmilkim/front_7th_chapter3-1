@@ -8,7 +8,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import UserForm, { userFormSchema, type UserFormValues } from "@/forms/user-form";
+import UserForm, {
+  userFormSchema,
+  type UserFormValues,
+} from "@/components/forms/user-form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type z from "zod";

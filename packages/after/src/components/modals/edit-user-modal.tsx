@@ -19,7 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import UserForm, {
   userFormSchema,
   type UserFormValues,
-} from "@/forms/user-form";
+} from "@/components/forms/user-form";
 
 interface EditUserModalProps {
   open: boolean;
