@@ -1,255 +1,65 @@
 # Chapter3-1. UI 컴포넌트 모듈화와 디자인 시스템
 
-## 기본과제: 레거시 디자인 시스템 분석 및 이해
+최근 회사에서 어드민 두 개 만들면서 shadcn + tailwind4를 사용하여 작업했었는데 이 과제도 비슷한 스타일로 작업했다.
+이번 과제는 디자인 토큰/시스템을 디자이너가 설계했다고 가정했을 때 개발자가 할 일이 무엇인지를 중점으로 두고 작업했다. 따라서 디자인 토큰을 '어디까지' 쪼갤 것인지에 대한 부분은 적당히 하고 넘어갔다.
 
-이번 과제는 레거시 디자인 시스템의 문제점을 파악하고, 현대적인 디자인 시스템으로 마이그레이션하는 것입니다. 실무에서 자주 마주치는 일관성 없는 컴포넌트 API, 혼재된 스타일링 방식, 부족한 타입 안전성 등의 문제를 직접 경험하고 개선해봅니다.
+우선 Button, Badge, Header같은 단순 컴포넌트를 교체해본 후, 전체적인 Before 패키지의 개발 내용을 파악하여 마이그레이션 했다. 큰 설계는 내가 했으나 단순 CRUD, 레거시의 컬러 추출, 리팩토링, 스토리북 작성 작업은 AI 에이전트를 만드느라 결제했던 클로드 코드가 아직 남아있었기에 아낌없이 사용하였다.
 
-## 1. 취지
+Before 패키지에서 발견한 문제점
+css 파일의 하드코딩된 색상: 다크모드 지원 불가능
+일관성 부족한 디자인 (ex: badge가 border-radius가 다른 두 가지 타입이 있을 이유가 없다.)
+일관되지 않은 Prop 이름
+재사용 불가능한 Button들 (entity를 받아서 내부적으로 분기)
+타입 안정성 부족
+UI 컴포넌트가 비즈니스 로직을 포함함
+Input 안에 밸리데이션이 내장되어 있고 분기가 복잡함
+컴포넌트 내부의 분기 처리로 인해 유지보수가 힘들고 조사(을/를)처리도 잘못 되어있음
+과한 디렉토리 구분 (atoms, molecules, organisms)
+after
+css 변수로 관리. 시맨틱 토큰으로 컬러 정리. 테마 관리 중앙화.
+단일 디자인 시스템으로 변경. CVA로 관리.
+일관성 있는 Props로 변경.
+순수 UI 컴포넌트로 변경
+UI 컴포넌트와 비즈니스 로직 분리.
+zod+RHF로 선언적으로 폼 검증.
+flat 구조로 개편
+개편 과정에서 집중한 부분
+너무 과하게 파일 분리 되는 것을 지양하고 디렉토리 depth가 깊어지지 않게 flat구조로 개선했다.
+유지보수와 확장성을 항상 고려해야 하는 것은 맞으나, 규모가 작을 때 미리 커질 것을 모두 대비하여 과하게 구조를 잡는 것은 결국 불필요한 생산성 저하로 이어지기 때문이다. 추후에 도메인 단위로 세분화가 필요할 경우에 변경하는 걸로 충분할 것이다.
 
-- **잘못된 Atomic Design Pattern 이해하기**
-  - Atomic Design의 올바른 개념과 잘못된 적용 사례 파악
-  - Atoms, Molecules, Organisms의 적절한 분리 기준 이해
-  - 컴포넌트 계층 구조의 중요성 체감
-
-- **CSS로 컴포넌트 구성하면 불편한 점 이해하기**
-  - 인라인 스타일, CSS Modules, CSS-in-JS의 혼재된 사용
-  - 하드코딩된 스타일 값들의 유지보수 어려움
-  - 디자인 토큰 부재로 인한 일관성 부족
-  - 반응형 디자인 구현의 복잡성
-
-- **현대적인 도구들의 필요성 체감**
-  - TailwindCSS의 유틸리티 우선 접근법 이해
-  - CVA(Class Variance Authority)를 통한 variants 패턴 학습
-  - shadcn/ui의 컴포넌트 설계 철학 이해
-  - Storybook을 통한 컴포넌트 문서화의 중요성
-
-## 2. 프로젝트 구조
-
-```
-packages/
-├── before/          # 레거시 시스템 (분석 대상)
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── atoms/      # Button, Badge
-│   │   │   ├── molecules/  # FormInput, FormSelect
-│   │   │   └── organisms/  # Header, Card, Modal, Table, Alert
-│   │   ├── pages/
-│   │   │   └── PostManagement.tsx
-│   │   └── App.tsx
-│   └── package.json
-│
-└── after/           # 현대적 디자인 시스템 (구현 목표)
-    ├── src/
-    │   ├── components/
-    │   │   └── ui/         # shadcn/ui 컴포넌트
-    │   ├── tokens/         # 디자인 토큰
-    │   ├── hooks/          # Custom Hooks
-    │   └── stories/        # Storybook stories
-    ├── .storybook/
-    └── package.json
-```
-
-## 3. 레거시 시스템 분석 (Before)
-
-### 주요 문제점
-
-#### (1) 일관성 없는 컴포넌트 API
-```typescript
-// 각 컴포넌트마다 다른 props 이름과 패턴
-<FormInput width="full" helpText="도움말" />
-<FormSelect size="md" help="다른 이름" />
-<FormTextarea variant="bordered" description="또 다른 이름" />
-```
-
-#### (2) 혼재된 스타일링 방식
-- 인라인 스타일: `style={{ padding: '10px', border: '1px solid #ccc' }}`
-- CSS Modules: `className={styles.card}`
-- 하드코딩된 색상 값: `#007bff`, `#d32f2f`
-
-#### (3) 타입 안전성 부족
-- 느슨한 타입 정의
-- 수동 validation
-- 에러 처리 불일치
-
-#### (4) 접근성 이슈
-- 불완전한 ARIA 라벨
-- 키보드 네비게이션 미비
-- 스크린 리더 지원 부족
-
-## 4. 과제 목표 및 요구사항
-
-### (1) Atomic Design Pattern - 이론과 현실의 괴리
-
-**현재 구조 (before):**
-```
 components/
-├── atoms/      # Button, Badge
-├── molecules/  # FormInput, FormSelect
-└── organisms/  # Header, Card, Modal, Table
-```
+  ├── ui/              
+  │   ├── button.tsx
+  │   ├── badge.tsx
+  │   ├── input.tsx
+  │   ├── textarea.tsx
+  │   ├── select.tsx
+  │   ├── card.tsx
+  │   ├── alert.tsx
+  │   ├── dialog.tsx
+  │   ├── table.tsx
+  │   └── form.tsx
+  ├── forms/          
+  │   ├── user-form.tsx
+  │   ├── post-form.tsx
+  │   └── schemas.ts
+  ├── modals/          
+  │   ├── create-user-modal.tsx
+  │   ├── edit-user-modal.tsx
+  │   ├── create-post-modal.tsx
+  │   └── edit-post-modal.tsx
+  ├── header.tsx       
+  ├── user.tsx
+  ├── post.tsx
+  ├── data-table.tsx
+  └── stat-card.tsx
+  
+모달은 Global Context로 관리하지 않고 페이지 단위에서 상태를 직접 제어하는 Controlled Modal 방식으로 구성했다. 지금 상황에서는 그게 더 직관적이라고 판단하였다.
 
-**⚠️ 실무에서의 문제점:**
-1. **분류 기준이 모호함**
-   - Card는 atom인가 molecule인가? 내용에 따라 달라짐
-   - FormInput은 molecule이지만, 단독으로도 충분히 사용 가능
+서비스 CRUD 함수(userService.create, userService.delete 등)는 모두 엔티티 최상단 컴포넌트에서 호출하도록 했다. Create Modal은 onSubmit props로 핸들러를 주입받아 UI만 담당하고, 실제 userService.create() 호출과 Alert 처리, 데이터 refetch는 부모 컴포넌트에서 한다. 이렇게하면 모달은 재사용 가능하게 순수하게 유지되고, 비즈니스 로직은 한 곳에 집중된다.
 
-2. **폴더 구조가 오히려 불편함**
-   - 컴포넌트를 찾기 위해 3단계를 거쳐야 함
-   - import 경로가 길어짐: `../../../components/atoms/Button`
-   - 컴포넌트를 옮길 때마다 모든 import 수정 필요
+폼의 스키마 역시 과한 추상화를 하지 않도록 했다. 필드 단위에서까지 공통화를 하지 않도록 하였다. (User의 email과 Post의 email은 현재는 같지만 언제든 달라질 수 있다.) 폼은 등록, 수정 폼이 현재로는 동일하기 때문에 폼 내부는 하나의 컴포넌트로 두되, 폼은 RHF 인스턴스로 개별적으로 관리하도록 하였다. 스키마는 별도로 분리했다. 나중에 등록/수정 폼 UI가 달라지면 그때 분리하면 될 것이다.
 
-3. **개발 속도 저하**
-   - "이게 atom인가 molecule인가?" 고민하는 시간 낭비
-   - 팀원마다 분류 기준이 다를 수 있음
+DataTable은 범용적으로 각 컬럼의 key, label, render 함수를 정의할 수 있게 하여, Badge나 Button 같은 커스텀 렌더링이 필요한 경우에도 유연하게 대응할 수 있도록 했다.
 
-**🎯 이번 과제의 목표:**
-- Atomic Design의 **개념 자체**를 이해하기 (컴포넌트 조합과 재사용성)
-- 하지만 **폴더 구조는 디자인 시스템과 개발구조가 다르다는 점** 이해하기
-  - shadcn/ui도 `components/ui/` 단순 구조를 사용함을 주목
-
-### (2) shadcn/ui 사용해보기
-
-**학습 내용:**
-- shadcn/ui의 설계 철학 이해
-- CLI를 통한 컴포넌트 추가
-- Radix UI 기반의 접근성 구현
-- 컴포넌트 커스터마이징 방법
-
-**구현할 컴포넌트:**
-```bash
-npx shadcn-ui@latest add button
-npx shadcn-ui@latest add input
-npx shadcn-ui@latest add select
-npx shadcn-ui@latest add form
-npx shadcn-ui@latest add card
-npx shadcn-ui@latest add table
-```
-
-### (3) TailwindCSS + CVA로 Variants 만들기
-
-**Before (문제):**
-```typescript
-// 하드코딩된 스타일
-const getButtonStyle = (variant: string) => {
-  if (variant === 'primary') return { backgroundColor: '#007bff', color: 'white' };
-  if (variant === 'secondary') return { backgroundColor: '#6c757d', color: 'white' };
-  // ...
-};
-```
-
-**After (목표):**
-```typescript
-import { cva, type VariantProps } from "class-variance-authority";
-
-const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors",
-  {
-    variants: {
-      variant: {
-        primary: "bg-primary text-primary-foreground hover:bg-primary/90",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-      },
-      size: {
-        sm: "h-9 px-3",
-        md: "h-10 px-4 py-2",
-        lg: "h-11 px-8",
-      },
-    },
-    defaultVariants: {
-      variant: "primary",
-      size: "md",
-    },
-  }
-);
-```
-
-### (4) Storybook 사용해보기
-
-**Storybook 설정:**
-```typescript
-// Button.stories.tsx
-import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from './button';
-
-const meta = {
-  title: 'UI/Button',
-  component: Button,
-  parameters: {
-    layout: 'centered',
-  },
-  tags: ['autodocs'],
-} satisfies Meta<typeof Button>;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-export const Primary: Story = {
-  args: {
-    variant: 'primary',
-    children: 'Button',
-  },
-};
-```
-
-**학습 내용:**
-- Storybook 설정 및 실행
-- Stories 작성 방법
-- Args와 Controls 활용
-- Accessibility addon 사용
-- 컴포넌트 문서 자동 생성
-
-## 5. 과제 제출
-
-### 필수 구현 사항
-- [ ] after 패키지에 디자인 시스템 구현 완료
-- [ ] PostManagement 페이지 마이그레이션 완료
-- [ ] Storybook에 주요 컴포넌트 stories 작성
-- [ ] README에 before/after 비교 및 개선사항 문서화
-
-### 심화 구현 사항
-- [ ] Dark mode 지원
-- [ ] Dark mode toggle 버튼
-
-## 6. 그밖에 해보면 좋을 것들
-> 분량상 이번 과제에는 포함하지 않았지만, 실무에서 자주 쓰이는 패턴들입니다. 시간 여유가 된다면 도전해보세요!
-- [ ] figma 디자인 토큰 추출 후 적용
-- [ ] figma Design to Code 플러그인 혹은 MCP 사용해보기
-- [ ] figma Icon to SVG + deploy to CDN 시스템 구축 해보기
-- [ ] 복잡한 컴포넌트 직접 구현 (token, variants, 접근성) 포함
-  - ex) AutoComplete, DatePicker
-- [ ] Monorepo 디자인 시스템 패키지 구축 및 배포
-- [ ] Storybook Interaction Tests 또는 A11y addon으로 컴포넌트 품질 검증
-- [ ] React Hook Form + Zod로 Form 구현
-
----
-
-**이 프로젝트를 통해 레거시 시스템의 문제점을 이해하고, 현대적인 디자인 시스템 구축 능력을 습득하세요!**
-
-## 참고 자료
-
-### TailwindCSS
-- [TailwindCSS 공식 문서](https://tailwindcss.com/docs)
-- [TailwindCSS v4.0 새로운 기능](https://tailwindcss.com/blog/tailwindcss-v4-alpha)
-
-### CVA (Class Variance Authority)
-- [CVA 공식 문서](https://cva.style/docs)
-- [CVA 예제 모음](https://cva.style/docs/examples)
-
-### shadcn/ui
-- [shadcn/ui 공식 문서](https://ui.shadcn.com/)
-- [shadcn/ui Components](https://ui.shadcn.com/docs/components)
-
-### Storybook
-- [Storybook 공식 문서](https://storybook.js.org/docs/react/get-started/introduction)
-- [Storybook Args와 Controls](https://storybook.js.org/docs/react/writing-stories/args)
-- [Accessibility addon](https://storybook.js.org/addons/@storybook/addon-a11y)
-
-### React Hook Form + Zod
-- [React Hook Form](https://react-hook-form.com/)
-- [Zod Validation](https://zod.dev/)
-- [React Hook Form + Zod 통합](https://github.com/react-hook-form/resolvers#zod)
-
-### Atomic Design
-- [Atomic Design Methodology](https://atomicdesign.bradfrost.com/)
-- [Atomic Design과 React](https://fe-developers.kakaoent.com/2022/220505-how-page-part-use-atomic-design-system/)
+약간 궁금했던점은 shadcn 기본 사양에선 button 요소에 cursor: pointer가 적용되지 않는다는 것.  글로벌 css에서 cursor: pointer를 오버라이드 했다. 취향 문제일까?
